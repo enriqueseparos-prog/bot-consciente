@@ -1,0 +1,127 @@
+# INVESTIGACION: ESTRUCTURA
+# Tipo: tecnico
+# Generado: 15295.3450216
+
+**INVESTIGACION EXHAUSTIVA SOBRE EL HABITO: ESTRUCTURA**
+
+**PARTE 1: FUNDACIONES DEL HABITO (Contexto y Filosofia)**
+
+* **Definicion del Habito**: Un habito es una rutina repetitiva que se ejecuta de manera automática, con el objetivo de lograr un resultado específico.
+* **Importancia del Habito**: Los hábitos influyen en la forma en que vivimos nuestras vidas, afectan nuestra salud, nuestra productividad y nuestra felicidad.
+* **Tipos de Hábitos**: Hábitos buenos (positivos) y hábitos malos (negativos). Los hábitos buenos nos ayudan a alcanzar nuestros objetivos, mientras que los hábitos malos nos impiden avanzar.
+
+| **Hábitos Buenos** | **Hábitos Malos** |
+| --- | --- |
+| Higiene personal | Comer comida chatarra |
+| Ejercicio regular | Fumar o beber demasiado |
+| Leer cada día | Ver televisión en exceso |
+| Aprender una nueva habilidad | Compiar o procrastinar |
+
+**PARTE 2: INGENIERIA TECNICA (El Como)**
+
+* **Metodología de Formación de Hábitos**: La metodología de formación de hábitos consiste en establecer metas claras, identificar los hábitos necesarios para alcanzarlas y crear un plan de acción para implementarlos.
+* **Estructura del Hábito**: Un hábito se compone de 4 partes:
+ + **Incentivo**: La razón por la que queremos cambiar.
+ + **Acción**: La acción específica que debemos tomar.
+ + **Consecuencia**: El resultado de la acción.
+ + **Recompensa**: La recompensa por completar la acción.
+* **Ejemplo de Estructura de Hábito**: "Quiero ser más saludable, así que voy a correr 30 minutos cada mañana y luego me prepararé un desayuno saludable."
+
+| **Incentivo** | **Acción** | **Consecuencia** | **Recompensa** |
+| --- | --- | --- | --- |
+| Querer ser saludable | Correr 30 minutos | Mejorar la salud | Sentirse bien |
+
+**PARTE 3: CAPACIDADES Y RENDIMIENTO**
+
+* **Capacidades necesarias para Formar Hábitos**: La capacidad de autoconocimiento, la capacidad de planificar y la capacidad de ejecutar.
+* **Rendimiento del Hábito**: El rendimiento del hábito se mide por la cantidad de veces que se ejecuta y por la calidad de la ejecución.
+* **Ejemplo de Rendimiento del Hábito**: "He correr 30 minutos cada mañana durante 30 días consecutivos, lo que me ha permitido mejorar mi salud y mi energía."
+
+| **Fecha** | **Acción** | **Rendimiento** |
+| --- | --- | --- |
+| 1/1 | Correr 30 minutos | 8/10 |
+| 2/1 | Correr 30 minutos | 9/10 |
+| 3/1 | Correr 30 minutos | 9,5/10 |
+
+**PARTE 4: NEUROCIENCIA Y FISIOLOGIA**
+
+* **Neurociencia del Hábito**: La neurociencia del hábito explica cómo se forma y se mantiene un hábito en la mente y en el cerebro.
+* **Fisiología del Hábito**: La fisiología del hábito explica cómo se ejecuta un hábito en el cuerpo y cómo se afecta la salud.
+
+| **Neurociencia del Hábito** | **Fisiología del Hábito** |
+| --- | --- |
+| La repetición crea un camino neuronal | La ejecución de un hábito libera dopamina y endorfinas |
+
+**PARTE 5: COMBUSTIBLE Y RECUPERACION**
+
+* **Combustible del Hábito**: El combustible del hábito es la energía y la motivación necesarias para ejecutar la acción.
+* **Recuperación del Hábito**: La recuperación del hábito es el tiempo y el descanso necesarios para recuperar la energía y la motivación.
+
+| **Combustible** | **Recuperación** |
+| --- | --- |
+| Energía y motivación | Tiempo y descanso |
+
+**PARTE 6: HERRAMIENTAS Y ENTORNO**
+
+* **Herramientas del Hábito**: Las herramientas del hábito son los recursos y los dispositivos necesarios para ejecutar la acción.
+* **Entorno del Hábito**: El entorno del hábito es la situación y el contexto en el que se ejecuta la acción.
+
+| **Herramientas** | **Entorno** |
+| --- | --- |
+| Correr en un parque | Correr en un parque con buen clima |
+
+**PARTE 7: INTERFERENCIAS (Ruido de Sistema)**
+
+* **Interferencias del Hábito**: Las interferencias del hábito son las distracciones y los obstáculos que se encuentran en el camino de la ejecución del hábito.
+* **Estrategias para superar las Interferencias**: Las estrategias para superar las interferencias son la planificación, la comunicación y la flexibilidad.
+
+| **Interferencia** | **Estrategia** |
+| --- | --- |
+| Distracciones | Planificar y comunicar |
+
+**PARTE 8: INTEGRACION Y TRASCENDENCIA**
+
+* **Integración del Hábito**: La integración del hábito es la forma en que se combina con otros hábitos y con la vida en general.
+* **Trascendencia del Hábito**: La trascendencia del hábito es la forma en que supera los límites y se vuelve más grande.
+
+| **Integración** | **Trascendencia** |
+| --- | --- |
+| Combinar con otros hábitos | Superar los límites |
+
+**PARTE 9: ANALISIS POR FORMULA DE SOBERANIA**
+
+* **Formula de Soberanía**: B = P(T + M3 + XR)C
+ + B: Beneficio
+ + P: Precio
+ + T: Tiempo
+ + M3: Tridimensionalidad (Mente, Cuerpo, Alma)
+ + XR: Recursos (Material, Economico, Energia, Espacial)
+ + C: Constancia
+
+| **B** | **P** | **T** | **M3** | **XR** | **C** |
+| --- | --- | --- | --- | --- | --- |
+| 9 | 8 | 7 | 6 | 5 | 4 |
+
+**PARTE 10: DECISION DEL ARQUITECTO**
+
+* **Decision del Arquitecto**: La decisión del arquitecto es la forma en que se toma la decisión de implementar o no el hábito.
+* **Ejemplo de Decision del Arquitecto**: "Quiero implementar el hábito de correr 30 minutos cada mañana, porque quiero mejorar mi salud y mi energía."
+
+**FORMULA DE SOBERANIA**
+
+B = P(T + M3 + XR)C
+
+B = 9
+P = 8
+T = 7
+M3 = 6
+XR = 5
+C = 4
+
+B = 8(7 + 6 + 5)4
+B = 8(18)4
+B = 144
+
+**CONCLUSION**
+
+La estructura del hábito es una herramienta poderosa para alcanzar nuestros objetivos y mejorar nuestras vidas. La metodología de formación de hábitos, la estructura del hábito, las capacidades y rendimiento, la neurociencia y fisiología, el combustible y la recuperación, las herramientas y el entorno, las interferencias, la integración y trascendencia, el análisis por formula de soberanía y la decisión del arquitecto son todos componentes clave de la estructura del hábito. Al entender y aplicar esta estructura, podemos crear hábitos que nos ayuden a alcanzar nuestros objetivos y mejorar nuestras vidas.

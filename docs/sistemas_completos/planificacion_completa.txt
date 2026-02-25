@@ -1,0 +1,246 @@
+# PLANIFICACIÓN COMPLETA DEL BOT CONSCIENTE v5.0
+# Generado: 25/02/2026
+# Basado en conversaciones con Kike
+
+=============================================================================
+1. VISIÓN GENERAL
+=============================================================================
+
+Bot de Telegram para desarrollo personal que integra:
+- 26 hábitos (Base, Cuerpo, Mente, Alma)
+- 25+ maestros (externos, internos, civilizaciones)
+- 3 prompts (A técnico, B empático, C plan)
+- Escala Hawking (alta/baja vibración)
+- 14 puntos filosóficos
+- Confrontación adaptativa
+- Memoria de usuario
+- Sistema multi-IA con fallback automático
+
+=============================================================================
+2. ESTRUCTURA DE CARPETAS
+=============================================================================
+
+bot-consciente/
++-- src/
+¦   +-- config.py                     # Multi-IA con fallback
+¦   +-- core/
+¦   ¦   +-- habitos.py                 # 26 hábitos con prioridades
+¦   ¦   +-- maestros.py                 # 25+ maestros
+¦   ¦   +-- protocolos.py               # Rescate, flujos, valores
+¦   ¦   +-- sistema.py                  # v3.1 (cubos, semillas)
+¦   +-- escala/                         # Alta/baja vibración
+¦   ¦   +-- alta_vibracion.py
+¦   ¦   +-- baja_vibracion.py
+¦   ¦   +-- detector_vibracional.py
+¦   +-- confrontacion/                  # Detectores y modos
+¦   ¦   +-- detectores.py
+¦   ¦   +-- modos.py
+¦   ¦   +-- frases.py
+¦   +-- 14_puntos/                      # Los 14 puntos
+¦   ¦   +-- grupo1.py (puntos 1-3)
+¦   ¦   +-- grupo2.py (puntos 4-6)
+¦   ¦   +-- grupo3.py (puntos 7-9)
+¦   ¦   +-- grupo4.py (puntos 10-12)
+¦   ¦   +-- grupo5.py (puntos 13-14)
+¦   +-- memoria/                         # Perfil de usuario
+¦   ¦   +-- perfil.py
+¦   ¦   +-- predicados.py
+¦   ¦   +-- recordatorios.py
+¦   +-- utils/                           # Utilidades
+¦       +-- dashboard.py
+¦       +-- feedback.py
+¦       +-- microdosis.py
+¦       +-- voz.py
++-- knowledge/
+¦   +-- habitos/                         # Investigaciones de hábitos
+¦   +-- maestros/                         # Biografías de maestros
+¦   +-- planes/                           # Planes de 31 días
+¦   +-- prompts/                           # Prompts en .txt
+¦   +-- protocolos/                       # Protocolos guardados
+¦   +-- escala/                           # Documentación de escala
++-- data/
+¦   +-- diarios/                           # Diarios privados
++-- docs/
+¦   +-- cuentas/                           # Gestión de cuentas
+¦   +-- marcos_teoricos/                   # Escala Hawking, 14 puntos
+¦   +-- sistemas_completos/                 # Respaldos (NUEVO)
++-- scripts/
+    +-- generar_investigaciones.py         # Generador de conocimiento
+
+=============================================================================
+3. HÁBITOS (26 total)
+=============================================================================
+
+BASE (4):
+- Relación con hijo (prioridad 2)
+- Relación con pareja (prioridad 2)
+- Relación con familiares (prioridad 1)
+- Tareas del hogar (prioridad 2)
+
+CUERPO (9):
+- Muay Thai (0)
+- Descanso (0)
+- Hidratación (0)
+- Dieta proteica (0)
+- Hipertrofia (Mentzer) (0)
+- Calistenia (0)
+- Flexibilidad Funcional (prioridad 3) ?
+- Medición y Seguimiento (0)
+- Cardio (0)
+
+MENTE (7):
+- Estoicismo (0)
+- Memoria (Jim Kwik) (0)
+- Eneagrama + Lectura de Personas (0)
+- Integración de la Sombra (Jung) (0)
+- Estructura del Pensamiento (0)
+- Toma de Decisiones (prioridad 3) ?
+- Lectura Veloz (0)
+
+ALMA (6):
+- Reiki (0)
+- Gestión Emocional (0)
+- Meditación Profunda (Silva) (0)
+- Propósito y Valores (0)
+- PNL (prioridad 3) ?
+- Eneagrama (0)
+
+=============================================================================
+4. MAESTROS
+=============================================================================
+
+EXTERNOS (25+):
+Salud: Frank Suárez, Nathaly Marcus, Ludwig Johnson, Barbara Onely
+Mente: Vishen Lakhiani, Laín García Calvo, Jim Kwik, Mario Alonso Puig
+Relaciones: Marshall Rosenberg, John Gottman, Carl Rogers, Thich Nhat Hanh, Bert Hellinger
+Universales: Salomón, Buda, Jesús, Lao Tzu, Marie Kondo
+Investigadores: Carl Jung, Joseph Campbell, Krishnamurti, Gurdjieff, Claudio Naranjo
+
+INTERNOS (9):
+INCA, BUSHIDO, SADHU, ESTOICO, SÓCRATES, SAN FRANCISCO, TÁNTRICO, MAYA, CHAMÁN
+
+CIVILIZACIONES (8):
+Filosofía China, Sabiduría Andina, Cosmología Maya, Tradición Hindú,
+Filosofía Griega, Cristianismo Místico, Budismo Tibetano, Chamanismo
+
+=============================================================================
+5. PROMPTS COMPLETOS
+=============================================================================
+
+PROMPT A - INVESTIGACIÓN TÉCNICA:
+Para hábitos de cuerpo y mente. Estructura de 10 partes con Fórmula de Soberanía.
+
+PROMPT B - INVESTIGACIÓN EMPÁTICA:
+Para relaciones y vida cotidiana. Versión adaptada con enfoque en paz y conexión.
+
+PROMPT C - PLANIFICACIÓN:
+5 preguntas + plan de 31 días personalizado.
+
+(Los prompts completos están en docs/sistemas_completos/)
+
+=============================================================================
+6. PROTOCOLOS ESENCIALES
+=============================================================================
+
+PROTOCOLO DE RESCATE (3 minutos):
+- Minuto 1 - Guerrero: Anclaje físico
+- Minuto 2 - Mago: Liberación energética
+- Minuto 3 - Arquero: Acción concreta
+
+FLUJOS MAESTROS:
+- Manifestación: Sócrates ? San Francisco ? Chamán ? Tántrico ? Inca ? Bushido
+- Recepción: Sócrates ? Estoico ? Inca ? Sadhu ? Chamán ? Maya
+- Integración: Inca ? Bushido ? Estoico ? Sócrates ? San Francisco ? Chamán
+- Expresión: Chamán ? Maya ? Tántrico ? Sadhu ? Bushido ? Inca
+
+VALORES:
+- Disciplina: Fuerza de coherencia interna
+- Responsabilidad: Capacidad de responder creativamente
+- Empatía: Resonancia consciente con límites
+
+=============================================================================
+7. ESCALA HAWKING (Alta/Baja Vibración)
+=============================================================================
+
+ALTA VIBRACIÓN:
+- Mente: Virtudes (sabiduría, justicia, templanza, fortaleza, fe, esperanza, caridad)
+- Alma: 7 dones de Jesús (sabiduría, entendimiento, consejo, fortaleza, ciencia, piedad, temor de Dios)
+- Cuerpo: 7 chakras (raíz, sacro, plexo, corazón, garganta, tercer ojo, corona)
+
+BAJA VIBRACIÓN:
+- Mente: Venenos (crítica, prejuicio, juicio, rigidez, cinismo, arrogancia, dogmatismo)
+- Alma: 7 pecados capitales (soberbia, avaricia, lujuria, ira, gula, envidia, pereza)
+- Cuerpo: Patrones reactivos (huida, parálisis, ataque, sumisión, negación, adicción, rigidez)
+
+=============================================================================
+8. LOS 14 PUNTOS
+=============================================================================
+
+1. Perspectiva
+2. Proyección
+3. Desafíos
+4. Identidad
+5. Tiempo
+6. Encarnar
+7. Campo cuántico
+8. Alineación
+9. Ritmo y rendición
+10. Gratitud
+11. Disciplina
+12. Desapego
+13. Propósito
+14. Expansión
+
+=============================================================================
+9. SISTEMA MULTI-IA
+=============================================================================
+
+PROVEEDORES CONFIGURADOS:
+- Gemini: Límite excedido temporalmente (429)
+- OpenRouter: Clave inválida (401) - necesita renovación
+- Cerebras: FUNCIONANDO (respuestas exitosas)
+- DeepSeek: Configurado pero no usado aún
+
+FALLBACK AUTOMÁTICO:
+El sistema prueba en orden: Gemini ? OpenRouter ? Cerebras ? DeepSeek
+Cuando uno falla, pasa al siguiente automáticamente.
+
+=============================================================================
+10. ESTADO ACTUAL (25/02/2026)
+=============================================================================
+
+? COMPLETADO:
+- Estructura de carpetas
+- Configuración multi-IA
+- core/habitos.py
+- core/maestros.py
+- core/protocolos.py
+- core/sistema.py
+- escala/alta_vibracion.py
+- escala/baja_vibracion.py
+- escala/detector_vibracional.py
+- scripts/generar_investigaciones.py
+- Investigaciones: flexibilidad, toma_decisiones, pnl, relacion_con_hijo
+
+? PENDIENTE:
+- confrontacion/ (detectores, modos, frases)
+- 14_puntos/ (5 archivos)
+- memoria/ (perfil, predicados, recordatorios)
+- utils/ (dashboard, feedback, microdosis, voz)
+- Generar resto de investigaciones (22 hábitos)
+- Generar biografías de maestros
+- bot.py (orquestador final)
+
+=============================================================================
+11. PRÓXIMOS PASOS (prioridad)
+=============================================================================
+
+1. Completar módulo de confrontación
+2. Generar todas las investigaciones restantes
+3. Crear módulo de 14 puntos
+4. Crear módulo de memoria
+5. Integrar todo en bot.py
+6. Subir a GitHub y sincronizar con PC de casa
+
+=============================================================================
+FIN DE LA PLANIFICACIÓN COMPLETA
