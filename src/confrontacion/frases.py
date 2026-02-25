@@ -28,7 +28,3 @@ FRASES = {
 def obtener_frase(modo):
     import random
     return random.choice(FRASES.get(modo, FRASES["acompanante"]))
-
-def obtener_frase_por_contexto(modo, contexto):
-    """Versión más avanzada (por implementar)"""
-    return obtener_frase(modo)

@@ -1,0 +1,128 @@
+# src/memoria/perfil.py
+# Perfil de usuario para seguimiento personalizado
+
+class PerfilUsuario:
+    """Almacena y gestiona la información de un usuario"""
+    
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.habitos_fuertes = []      # Hábitos con nivel plata/oro
+        self.habitos_debiles = []       # Hábitos que cuestan trabajo
+        self.temas_recurrentes = {}     # Frecuencia de temas hablados
+        self.ultimo_estado = {"cuerpo": 5, "mente": 5, "alma": 5}
+        self.maestros_afines = []        # Maestros que más ha invocado
+        self.racha_actual = 0            # Días seguidos de checkin
+        self.ultimo_checkin = None       # Fecha del último checkin
+    
+    def actualizar_por_checkin(self, cuerpo, mente, alma):
+        """Actualiza el perfil basado en un nuevo checkin"""
+        self.ultimo_estado = {
+            "cuerpo": cuerpo,
+            "mente": mente,
+            "alma": alma
+        }
+        
+        # Identificar áreas débiles (menos de 4)
+        if cuerpo < 4 and "cuerpo" not in self.habitos_debiles:
+            self.habitos_debiles.append("cuerpo")
+        if mente < 4 and "mente" not in self.habitos_debiles:
+            self.habitos_debiles.append("mente")
+        if alma < 4 and "alma" not in self.habitos_debiles:
+            self.habitos_debiles.append("alma")
+        
+        # Identificar áreas fuertes (más de 8)
+        if cuerpo > 8 and "cuerpo" not in self.habitos_fuertes:
+            self.habitos_fuertes.append("cuerpo")
+        if mente > 8 and "mente" not in self.habitos_fuertes:
+            self.habitos_fuertes.append("mente")
+        if alma > 8 and "alma" not in self.habitos_fuertes:
+            self.habitos_fuertes.append("alma")
+    
+    def registrar_tema(self, tema):
+        """Registra un tema mencionado en conversación"""
+        if tema in self.temas_recurrentes:
+            self.temas_recurrentes[tema] += 1
+        else:
+            self.temas_recurrentes[tema] = 1
+    
+    def obtener_temas_frecuentes(self, minimo=3):
+        """Devuelve temas que aparecen con frecuencia"""
+        return [t for t, c in self.temas_recurrentes.items() if c >= minimo]
+    
+    def registrar_maestro(self, maestro):
+        """Registra cuando se invoca un maestro"""
+        if maestro not in self.maestros_afines:
+            self.maestros_afines.append(maestro)
+        # Si ya está, lo movemos al final para indicar uso reciente
+        else:
+            self.maestros_afines.remove(maestro)
+            self.maestros_afines.append(maestro)
+    
+    def sugerir_maestro(self):
+        """Sugiere un maestro basado en el historial"""
+        if self.maestros_afines:
+            # El último usado
+            return self.maestros_afines[-1]
+        return None
+    
+    def sugerir_habito_prioritario(self, habitos_disponibles):
+        """Sugiere un hábito basado en áreas débiles"""
+        if "mente" in self.habitos_debiles:
+            return "Toma de Decisiones"
+        elif "cuerpo" in self.habitos_debiles:
+            return "Flexibilidad"
+        elif "alma" in self.habitos_debiles:
+            return "PNL"
+        return None
+    
+    def actualizar_racha(self, fecha_checkin):
+        """Actualiza la racha de checkins consecutivos"""
+        from datetime import datetime, timedelta
+        
+        if self.ultimo_checkin:
+            ultimo = datetime.strptime(self.ultimo_checkin, "%Y-%m-%d")
+            hoy = datetime.strptime(fecha_checkin, "%Y-%m-%d")
+            
+            if (hoy - ultimo).days == 1:
+                self.racha_actual += 1
+            elif (hoy - ultimo).days > 1:
+                self.racha_actual = 1  # Se reinicia
+        else:
+            self.racha_actual = 1
+        
+        self.ultimo_checkin = fecha_checkin
+    
+    def obtener_resumen(self):
+        """Devuelve un resumen del perfil"""
+        texto = f"?? *PERFIL DE USUARIO*\n\n"
+        texto += f"Racha actual: {self.racha_actual} días\n"
+        texto += f"Último estado: Cuerpo {self.ultimo_estado['cuerpo']}, "
+        texto += f"Mente {self.ultimo_estado['mente']}, "
+        texto += f"Alma {self.ultimo_estado['alma']}\n\n"
+        
+        if self.habitos_fuertes:
+            texto += f"?? Áreas fuertes: {', '.join(self.habitos_fuertes)}\n"
+        if self.habitos_debiles:
+            texto += f"?? Áreas a mejorar: {', '.join(self.habitos_debiles)}\n"
+        
+        return texto
+
+
+# Diccionario global de perfiles (en memoria)
+# En un bot real, esto se guardaría en base de datos
+PERFILES = {}
+
+def obtener_perfil(user_id):
+    """Obtiene o crea un perfil para un usuario"""
+    if user_id not in PERFILES:
+        PERFILES[user_id] = PerfilUsuario(user_id)
+    return PERFILES[user_id]
+
+def guardar_perfiles():
+    """Aquí iría la lógica para guardar en BD"""
+    # Por ahora, solo mantenemos en memoria
+    pass
+
+def cargar_perfiles():
+    """Aquí iría la lógica para cargar desde BD"""
+    pass

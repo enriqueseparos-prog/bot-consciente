@@ -143,8 +143,8 @@ async def main():
     parser = argparse.ArgumentParser(description="Generar investigaciones de habitos")
     parser.add_argument("--tema", help="Tema especifico a investigar")
     parser.add_argument("--lista", help="Lista de temas separados por comas")
-    parser.add_argument("--tipo", default="tecnico", choices=["tecnico", "empatico"], 
-                       help="Tipo de investigacion (tecnico o empatico)")
+    parser.add_argument("--tipo", default="tecnico", choices=["tecnico", "empatico", "biografia"], 
+                   help="Tipo de investigacion (tecnico, empatico o biografia)")
     
     args = parser.parse_args()
     

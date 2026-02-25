@@ -15,7 +15,7 @@ MODOS = {
     "estoico": {
         "nombre": "Estoico",
         "tono": "directo, filosófico, desafiante",
-        "objetivo": "Confrentar patrones",
+        "objetivo": "Confrontar patrones",
         "frases_clave": [
             "Si no puedes cambiar lo que pasa, cambia cómo lo interpretas.",
             "El obstáculo es el camino.",

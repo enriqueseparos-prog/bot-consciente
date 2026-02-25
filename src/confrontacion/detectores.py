@@ -5,7 +5,6 @@ def detectar_patron(texto, historial=None):
     """Detecta patrones de baja vibración o repetición"""
     texto_lower = texto.lower()
     
-    # Palabras clave de baja vibración
     palabras_baja = ["no puedo", "siempre", "nunca", "odio", "fracaso", "imposible", "culpa", "debería"]
     
     for palabra in palabras_baja:
@@ -17,7 +16,6 @@ def detectar_patron(texto, historial=None):
                 "sugerencia": f"Noto que usaste '{palabra}'. ¿Qué hay detrás de eso?"
             }
     
-    # Detección de repetición (si hay historial)
     if historial and len(historial) > 0:
         temas_recientes = [h.get("tema", "") for h in historial[-3:]]
         if any(tema in texto_lower for tema in temas_recientes):
