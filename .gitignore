@@ -1,0 +1,34 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+.env
+venv/
+env/
+ENV/
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+
+# Telegram bot
+config.py
+*.token
+bot_token.py
+token.py
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# Archivos con nombres raros
+ersAdairbot-consciente*
