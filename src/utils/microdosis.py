@@ -1,61 +1,62 @@
+# -*- coding: utf-8 -*-
 # src/utils/microdosis.py
-# Versiones mínimas de hábitos para cuando no hay tiempo
+# Versiones minimas de habitos para cuando no hay tiempo - Version sin acentos
 
 MICRODOSIS = {
-    # HÁBITOS BASE
-    "relación con hijo": "Mirá a tu hijo a los ojos y decile 'te quiero' o preguntale algo con genuino interés. 30 segundos.",
-    "relación con pareja": "Un abrazo de 10 segundos sin hablar. Solo presencia.",
-    "relación con familiares": "Envía un mensaje corto a un familiar que hace tiempo no contactas.",
-    "tareas del hogar": "Ordená UNA cosa (la cama, los platos, una silla). 2 minutos.",
+    # HABITOS BASE
+    "relacion con hijo": "Mira a tu hijo a los ojos y dile 'te quiero' o preguntale algo con genuino interes. 30 segundos.",
+    "relacion con pareja": "Un abrazo de 10 segundos sin hablar. Solo presencia.",
+    "relacion con familiares": "Envia un mensaje corto a un familiar que hace tiempo no contactas.",
+    "tareas del hogar": "Ordena UNA cosa (la cama, los platos, una silla). 2 minutos.",
     
-    # HÁBITOS DE CUERPO
-    "flexibilidad": "Estirá un brazo 10 segundos mientras respirás. Cambiá de lado.",
-    "muay thai": "Sombra boxing 1 minuto. Sin técnica, solo mover el cuerpo.",
-    "descanso": "Cerrá los ojos 60 segundos. Respirá profundo.",
-    "hidratación": "Tomá un vaso de agua AHORA.",
-    "dieta proteica": "En tu próxima comida, asegurate de que haya proteína.",
+    # HABITOS DE CUERPO
+    "flexibilidad": "Estira un brazo 10 segundos mientras respiras. Cambia de lado.",
+    "muay thai": "Sombra boxing 1 minuto. Sin tecnica, solo mover el cuerpo.",
+    "descanso": "Cierra los ojos 60 segundos. Respira profundo.",
+    "hidratacion": "Toma un vaso de agua AHORA.",
+    "dieta proteica": "En tu proxima comida, asegurate de que haya proteina.",
     "hipertrofia": "5 flexiones de brazos. Sin excusas.",
-    "calistenia": "3 sentadillas. Sentí las piernas.",
-    "medición": "Pesate o tomate una medida rápida.",
-    "cardio": "Subí y bajá una escalera o caminá rápido 2 minutos.",
+    "calistenia": "3 sentadillas. Siente las piernas.",
+    "medicion": "Pesate o tomate una medida rapida.",
+    "cardio": "Sube y baja una escalera o camina rapido 2 minutos.",
     
-    # HÁBITOS DE MENTE
-    "estoicismo": "Preguntate: ¿esto que me preocupa depende de mí?",
-    "memoria": "Intentá recordar 3 cosas que hiciste ayer.",
-    "eneagrama": "Observá una reacción tuya y preguntate: ¿qué tipo se activó?",
-    "sombra": "Escribí una emoción que hoy escondiste.",
-    "estructura": "Hacé una lista de 3 cosas pendientes. Ordenalas.",
-    "toma de decisiones": "Elegí entre A o B en 10 segundos. No pienses.",
-    "lectura veloz": "Leé un párrafo con el dedo guía.",
+    # HABITOS DE MENTE
+    "estoicismo": "Preguntate: Â¿esto que me preocupa depende de mi?",
+    "memoria": "Intenta recordar 3 cosas que hiciste ayer.",
+    "eneagrama": "Observa una reaccion tuya y preguntate: Â¿que tipo se activo?",
+    "sombra": "Escribe una emocion que hoy escondiste.",
+    "estructura": "Haz una lista de 3 cosas pendientes. Ordenalas.",
+    "toma de decisiones": "Elige entre A o B en 10 segundos. No pienses.",
+    "lectura veloz": "Lee un parrafo con el dedo guia.",
     
-    # HÁBITOS DE ALMA
-    "reiki": "Poné las manos en tu corazón y respirá. 1 minuto.",
-    "gestión emocional": "Identificá la emoción del momento y nombrala.",
-    "meditación": "3 respiraciones conscientes. Ahora.",
-    "propósito": "Preguntate: ¿qué quiero hoy? Una palabra.",
-    "pnl": "Cambiá tu postura física por 30 segundos. Notá cómo cambia tu ánimo.",
-    "gratitud": "Nombra UNA cosa que hoy no salió mal.",
-    "disciplina": "Hacé una cosa que postergabas. 2 minutos.",
-    "desapego": "Soltá una expectativa. Solo por hoy."
+    # HABITOS DE ALMA
+    "reiki": "Pon las manos en tu corazon y respira. 1 minuto.",
+    "gestion emocional": "Identifica la emocion del momento y nombrala.",
+    "meditacion": "3 respiraciones conscientes. Ahora.",
+    "proposito": "Preguntate: Â¿que quiero hoy? Una palabra.",
+    "pnl": "Cambia tu postura fisica por 30 segundos. Nota como cambia tu animo.",
+    "gratitud": "Nombra UNA cosa que hoy no salio mal.",
+    "disciplina": "Haz una cosa que postergabas. 2 minutos.",
+    "desapego": "Suelta una expectativa. Solo por hoy."
 }
 
 def obtener_microdosis(habito):
-    """Devuelve la microdosis para un hábito específico"""
+    """Devuelve la microdosis para un habito especifico"""
     habito_lower = habito.lower()
     
-    # Búsqueda directa
+    # Busqueda directa
     if habito_lower in MICRODOSIS:
         return MICRODOSIS[habito_lower]
     
-    # Búsqueda aproximada (por si el nombre no coincide exactamente)
+    # Busqueda aproximada (por si el nombre no coincide exactamente)
     for clave, valor in MICRODOSIS.items():
         if clave in habito_lower or habito_lower in clave:
             return valor
     
-    return "Respirá profundo 3 veces y preguntate: ¿qué necesito ahora?"
+    return "Respira profundo 3 veces y preguntate: Â¿que necesito ahora?"
 
 def obtener_microdosis_aleatoria():
     """Devuelve una microdosis al azar"""
     import random
     habito = random.choice(list(MICRODOSIS.keys()))
-    return f"?? *Microdosis para '{habito}':*\n{MICRODOSIS[habito]}"
+    return f"ðŸ§  *Microdosis para '{habito}':*\n{MICRODOSIS[habito]}"

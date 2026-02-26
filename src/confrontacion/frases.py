@@ -1,27 +1,27 @@
 # src/confrontacion/frases.py
-# Banco de frases por modo
+# Banco de frases por modo - Version sin acentos
 
 FRASES = {
     "acompanante": [
-        "Estoy aquí contigo. ¿Cómo te sientes ahora?",
+        "Estoy aqui contigo. Â¿Como te sientes ahora?",
         "A veces solo necesitamos que nos escuchen. Te escucho.",
-        "Respira profundo. No estás solo en esto.",
-        "Lo que sientes es válido. ¿Quieres explorarlo?",
-        "Hoy puede ser difícil, pero estás aquí. Eso ya es mucho."
+        "Respira profundo. No estas solo en esto.",
+        "Lo que sientes es valido. Â¿Quieres explorarlo?",
+        "Hoy puede ser dificil, pero estas aqui. Eso ya es mucho."
     ],
     "estoico": [
-        "No puedes controlar lo que pasa, pero sí cómo respondes.",
+        "No puedes controlar lo que pasa, pero si como respondes.",
         "La adversidad es combustible para el alma fuerte.",
-        "¿Esto que te preocupa, depende de ti o no?",
+        "Â¿Esto que te preocupa, depende de ti o no?",
         "El sufrimiento nace del deseo, no del evento.",
-        "Recuerda: esto también pasará."
+        "Recuerda: esto tambien pasara."
     ],
     "socratico": [
-        "¿Qué pasaría si lo miraras desde otra perspectiva?",
-        "¿Eso que piensas es realmente cierto?",
-        "Si no hubiera miedo, ¿qué harías?",
-        "¿Qué te gustaría que pasara?",
-        "¿Cómo sería un buen día para ti?"
+        "Â¿Que pasaria si lo miraras desde otra perspectiva?",
+        "Â¿Eso que piensas es realmente cierto?",
+        "Si no hubiera miedo, Â¿que harÃ­as?",
+        "Â¿Que te gustaria que pasara?",
+        "Â¿Como seria un buen dia para ti?"
     ]
 }
 

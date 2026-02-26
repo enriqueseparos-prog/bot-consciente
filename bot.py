@@ -1,273 +1,575 @@
+# bot.py - Orquestador principal del Bot Consciente v5.0
+# Versión final con todos los módulos integrados
+
 import logging
 import sqlite3
 import matplotlib.pyplot as plt
 import io
-from datetime import datetime
+import os
+import asyncio
+from datetime import datetime, timedelta
+from pathlib import Path
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import google.generativeai as genai
+
+# Configuración de logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # ============================================
-# CONFIGURACIÓN (CAMBIA ESTOS VALORES)
+# CONFIGURACIÓN - API KEYS
 # ============================================
 
-TOKEN = "8781338642:AAHUVZBRvjH5oea5pQF97eO5No3qYnPTOJE"
-GEMINI_KEY = "AIzaSyAvGC6NH1WkxGnmsd9Dmiyq5wduO5gA6BQ"
+# Cargar variables de entorno desde .env
+from dotenv import load_dotenv
+load_dotenv()
 
-# Configurar Gemini
-genai.configure(api_key=GEMINI_KEY)
+TOKEN = os.getenv("TELEGRAM_TOKEN", "8781338642:AAHUVZBRvjH5oea5pQF97eO5No3qYnPTOJE")
+GEMINI_KEY = os.getenv("GEMINI_API_KEY")
+OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY")
+CEREBRAS_KEY = os.getenv("CEREBRAS_API_KEY")
+DEEPSEEK_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 # ============================================
-# DIAGNÓSTICO DE MODELOS GEMINI
+# IMPORTAR MÓDULOS DEL SISTEMA
 # ============================================
-model = None
-modelo_elegido = None
 
-print("🔍 Consultando modelos disponibles en tu proyecto...")
-try:
-    modelos_disponibles = list(genai.list_models())
-    print(f"✅ Se encontraron {len(modelos_disponibles)} modelos en total.")
-
-    # Filtrar modelos que soporten 'generateContent'
-    modelos_generativos = [m for m in modelos_disponibles if 'generateContent' in m.supported_generation_methods]
-
-    if not modelos_generativos:
-        print("❌ No se encontró ningún modelo que soporte generateContent.")
-        print("   Posibles causas: La API no está bien habilitada o el proyecto no tiene acceso.")
-    else:
-        print("📚 Modelos disponibles (que soportan generateContent):")
-        for m in modelos_generativos:
-            print(f"   - {m.name}")
-
-        # Intentar elegir un modelo conocido y estable
-        nombres_preferidos = [
-            'models/gemini-1.5-flash-001',
-            'models/gemini-1.0-pro-001',
-            'models/gemini-1.5-flash',
-            'models/gemini-pro',
-        ]
-
-        modelo_elegido = None
-        for nombre_preferido in nombres_preferidos:
-            if any(m.name == nombre_preferido for m in modelos_generativos):
-                modelo_elegido = nombre_preferido
-                print(f"✅ Usando modelo preferido: {modelo_elegido}")
-                break
-
-        if not modelo_elegido and modelos_generativos:
-            modelo_elegido = modelos_generativos[0].name
-            print(f"⚠️ Usando el primer modelo disponible: {modelo_elegido}")
-
-        if modelo_elegido:
-            model = genai.GenerativeModel(modelo_elegido)
-            print(f"🎯 Modelo configurado: {modelo_elegido}")
-        else:
-            print("❌ No se pudo configurar ningún modelo.")
-
-except Exception as e:
-    print(f"❌ Error crítico al conectar con Gemini: {e}")
-    print("   Revisa que la API Key sea correcta y que la Generative Language API esté habilitada en Google Cloud.")
-    model = None
+from src.config import ai_client
+from src.core.habitos import HABITOS, obtener_prioridades
+from src.core.maestros import buscar_maestro, listar_maestros
+from src.core.protocolos import obtener_rescate, check_valores, listar_flujos, obtener_flujo
+from src.core.sistema import obtener_diagnostico
+from src.escala.detector_vibracional import clasificar_vibracion, sugerir_accion_por_vibracion
+from src.confrontacion.detectores import detectar_patron, detectar_estado_emocional
+from src.confrontacion.modos import elegir_modo, obtener_frase as obtener_frase_confrontacion
+from src.memoria.perfil import obtener_perfil, PERFILES
+from src.utils.microdosis import obtener_microdosis, obtener_microdosis_aleatoria
 
 # ============================================
 # BASE DE DATOS
 # ============================================
+
 def init_db():
-    conn = sqlite3.connect('bot_data.db')
+    conn = sqlite3.connect('data/bot_data.db')
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS usuarios
-                 (user_id INTEGER PRIMARY KEY, 
-                  nombre TEXT,
-                  primera_vez TIMESTAMP)''')
+    
+    # Tabla de registros diarios (checkin)
     c.execute('''CREATE TABLE IF NOT EXISTS registros
                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
                   user_id INTEGER,
-                  fecha DATE,
-                  mente INTEGER,
-                  alma INTEGER,
+                  fecha TEXT,
                   cuerpo INTEGER,
-                  notas TEXT)''')
+                  mente INTEGER,
+                  alma INTEGER)''')
+    
+    # Tabla de conversaciones (memoria total)
     c.execute('''CREATE TABLE IF NOT EXISTS conversaciones
                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
                   user_id INTEGER,
-                  timestamp TIMESTAMP,
-                  mensaje_usuario TEXT,
-                  respuesta_bot TEXT)''')
+                  fecha TEXT,
+                  mensaje TEXT,
+                  respuesta TEXT,
+                  tema TEXT,
+                  modo TEXT)''')
+    
+    # Tabla de feedback
+    c.execute('''CREATE TABLE IF NOT EXISTS feedback
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  user_id INTEGER,
+                  fecha TEXT,
+                  sugerencia TEXT,
+                  respuesta TEXT,
+                  utilidad INTEGER)''')
+    
     conn.commit()
     conn.close()
 
-def guardar_registro(user_id, mente, alma, cuerpo, notas=""):
-    conn = sqlite3.connect('bot_data.db')
+def guardar_registro(user_id, cuerpo, mente, alma):
+    conn = sqlite3.connect('data/bot_data.db')
     c = conn.cursor()
-    c.execute("INSERT INTO registros (user_id, fecha, mente, alma, cuerpo, notas) VALUES (?, date('now'), ?, ?, ?, ?)",
-              (user_id, mente, alma, cuerpo, notas))
+    fecha = datetime.now().strftime("%Y-%m-%d %H:%M")
+    c.execute("INSERT INTO registros (user_id, fecha, cuerpo, mente, alma) VALUES (?, ?, ?, ?, ?)",
+              (user_id, fecha, cuerpo, mente, alma))
     conn.commit()
     conn.close()
 
-def guardar_conversacion(user_id, mensaje, respuesta):
-    conn = sqlite3.connect('bot_data.db')
+def guardar_conversacion(user_id, mensaje, respuesta, tema=None, modo=None):
+    conn = sqlite3.connect('data/bot_data.db')
     c = conn.cursor()
-    c.execute("INSERT INTO conversaciones (user_id, timestamp, mensaje_usuario, respuesta_bot) VALUES (?, datetime('now'), ?, ?)",
-              (user_id, mensaje, respuesta))
+    fecha = datetime.now().strftime("%Y-%m-%d %H:%M")
+    c.execute("INSERT INTO conversaciones (user_id, fecha, mensaje, respuesta, tema, modo) VALUES (?, ?, ?, ?, ?, ?)",
+              (user_id, fecha, mensaje, respuesta, tema, modo))
     conn.commit()
     conn.close()
 
-def obtener_ultimos_registros(user_id, dias=7):
-    conn = sqlite3.connect('bot_data.db')
+def obtener_historial(user_id):
+    conn = sqlite3.connect('data/bot_data.db')
     c = conn.cursor()
-    c.execute("SELECT fecha, mente, alma, cuerpo FROM registros WHERE user_id = ? ORDER BY fecha DESC LIMIT ?",
-              (user_id, dias))
+    c.execute("SELECT fecha, cuerpo, mente, alma FROM registros WHERE user_id=? ORDER BY fecha", (user_id,))
+    datos = c.fetchall()
+    conn.close()
+    return datos
+
+def buscar_historial_tema(user_id, tema, limite=3):
+    conn = sqlite3.connect('data/bot_data.db')
+    c = conn.cursor()
+    c.execute('''SELECT fecha, mensaje, respuesta FROM conversaciones 
+                 WHERE user_id=? AND (tema LIKE ? OR mensaje LIKE ?)
+                 ORDER BY fecha DESC LIMIT ?''',
+              (user_id, f'%{tema}%', f'%{tema}%', limite))
     resultados = c.fetchall()
     conn.close()
     return resultados
 
-# ============================================
-# COMANDOS DEL BOT
-# ============================================
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    conn = sqlite3.connect('bot_data.db')
+def obtener_ultimo_mensaje(user_id):
+    conn = sqlite3.connect('data/bot_data.db')
     c = conn.cursor()
-    c.execute("INSERT OR IGNORE INTO usuarios (user_id, nombre, primera_vez) VALUES (?, ?, datetime('now'))",
-              (user.id, user.first_name))
-    conn.commit()
+    c.execute("SELECT mensaje, fecha FROM conversaciones WHERE user_id=? ORDER BY fecha DESC LIMIT 1", (user_id,))
+    resultado = c.fetchone()
     conn.close()
-    await update.message.reply_text(
-        f"🌟 *Hola {user.first_name}!*\n\n"
-        "Soy tu *Entrenador Consciente*. Puedes hablarme como a un amigo.\n\n"
-        "📌 *Comandos:*\n"
-        "/checkin - Registro rápido de mente/alma/cuerpo\n"
-        "/stats - Ver tus últimos registros\n"
-        "/grafica - Ver gráfica de evolución\n"
-        "/reset - Reiniciar conversación\n\n"
-        "✨ *O simplemente háblame*: cuéntame cómo estás.",
-        parse_mode="Markdown"
-    )
+    return resultado
 
-async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    context.user_data['checkin_paso'] = 'mente'
-    await update.message.reply_text(
-        "🌅 *CHECK-IN*\n\n1. *MENTE*: ¿Cómo está tu claridad hoy? (1-10)",
-        parse_mode="Markdown"
-    )
+def obtener_usuarios_inactivos(dias=3):
+    conn = sqlite3.connect('data/bot_data.db')
+    c = conn.cursor()
+    fecha_limite = (datetime.now() - timedelta(days=dias)).strftime("%Y-%m-%d %H:%M")
+    c.execute('''SELECT DISTINCT user_id FROM conversaciones 
+                 WHERE user_id NOT IN 
+                 (SELECT user_id FROM conversaciones WHERE fecha > ?)''', (fecha_limite,))
+    inactivos = c.fetchall()
+    conn.close()
+    return [u[0] for u in inactivos]
 
-async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+# ============================================
+# FUNCIONES DE GEMINI/IA
+# ============================================
+
+async def clasificar_con_gemini(texto):
+    """Clasifica el mensaje en tema y estado de ánimo aproximado"""
+    try:
+        prompt = f"""Del siguiente mensaje, extraé:
+- Tema principal (una palabra: hijo/pareja/cuerpo/mente/alma/trabajo/otro)
+- Estado de ánimo aproximado (1-10)
+- Intención (ayuda/desahogo/consulta/investigacion/otro)
+
+Formato de respuesta: tema|estado|intencion
+
+Mensaje: {texto}"""
+        
+        respuesta = await ai_client.get_completion(
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=100
+        )
+        
+        partes = respuesta.strip().split('|')
+        if len(partes) == 3:
+            return {
+                "tema": partes[0],
+                "estado": int(partes[1]) if partes[1].isdigit() else 5,
+                "intencion": partes[2]
+            }
+        else:
+            return {"tema": "otro", "estado": 5, "intencion": "otro"}
+    except Exception as e:
+        logging.error(f"Error en clasificación: {e}")
+        return {"tema": "otro", "estado": 5, "intencion": "otro"}
+
+async def generar_respuesta_con_ia(prompt, modo="guia"):
+    system_prompts = {
+        "guia": "Eres un guía breve y directo. Respondes con 1-2 frases cortas. Nada de divagaciones.",
+        "acompanante": "Eres un acompañante que escucha y responde con pocas palabras. Validás y preguntás.",
+        "socratico": "Hacés UNA pregunta corta que invite a reflexionar. Máximo 2 líneas."
+    }
+    system_content = system_prompts.get(modo, system_prompts["guia"])
+    
+    try:
+        respuesta = await ai_client.get_completion(
+            messages = [
+                 {"role": "system", "content": system_content + " No inventes información. Si no hay contexto, preguntá abiertamente."},
+                  {"role": "user", "content": prompt}
+],
+            temperature=0.7,
+            max_tokens=800
+        )
+        return respuesta
+    except Exception as e:
+        logging.error(f"Error generando respuesta: {e}")
+        return None
+
+# ============================================
+# FUNCIONES PARA LEER ARCHIVOS DE KNOWLEDGE
+# ============================================
+
+def leer_investigacion(carpeta, tema):
+    """Lee un archivo de investigación de knowledge/"""
+    nombre_archivo = tema.lower().replace(" ", "_").replace("í", "i").replace("á", "a")
+    ruta = Path(f"knowledge/{carpeta}/{nombre_archivo}.txt")
+    if ruta.exists():
+        with open(ruta, "r", encoding="utf-8") as f:
+            return f.read()
+    return None
+
+# ============================================
+# COMANDOS PRINCIPALES
+# ============================================
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    registros = obtener_ultimos_registros(user_id, 7)
-    if not registros:
-        await update.message.reply_text("Aún no tienes registros. Usa /checkin para empezar.")
-        return
-    mensaje = "📊 *TUS ÚLTIMOS REGISTROS*\n\n"
-    for fecha, mente, alma, cuerpo in registros:
-        mensaje += f"📅 {fecha}\n🧠 {mente} | ❤️ {alma} | 💪 {cuerpo}\n\n"
+    perfil = obtener_perfil(user_id)
+    
+    mensaje = (
+        "🌟 *BOT CONSCIENTE v5.0*\n\n"
+        "*Comandos principales:*\n"
+        "• `/habitos` - Ver 26 hábitos\n"
+        "• `/maestro [nombre]` - Invocar sabiduría\n"
+        "• `/investigar [tema]` - Investigación de hábitos\n"
+        "• `/biografia [maestro]` - Biografía de maestro\n"
+        "• `/rescate` - Protocolo 3 min\n"
+        "• `/valores` - Preguntas diarias\n"
+        "• `/flujo [nombre]` - Flujos maestros\n"
+        "• `/microdosis [hábito]` - Versión mínima\n"
+        "• `/perfil` - Ver tu perfil\n\n"
+        "• Mandá `7 8 9` para checkin rápido\n\n"
+        f"📊 *Tu perfil:* Racha {perfil.racha_actual} días"
+    )
     await update.message.reply_text(mensaje, parse_mode="Markdown")
+    guardar_conversacion(user_id, "/start", mensaje, "sistema", "guia")
+
+async def habitos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    mensaje = "📋 *TUS 26 HÁBITOS*\n\n"
+    
+    for dominio, lista in HABITOS.items():
+        mensaje += f"🔹 *{dominio.upper()}*\n"
+        for habito in lista:
+            estrella = " ⭐" if habito["prioridad"] == 3 else ""
+            mensaje += f"  • {habito['nombre']}{estrella}\n"
+        mensaje += "\n"
+    
+    mensaje += "⭐ = Prioridad actual"
+    await update.message.reply_text(mensaje, parse_mode="Markdown")
+    guardar_conversacion(update.effective_user.id, "/habitos", mensaje, "sistema", "guia")
 
 async def grafica(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    registros = obtener_ultimos_registros(user_id, 14)
-    if len(registros) < 2:
-        await update.message.reply_text("Necesito al menos 2 registros para graficar.")
+    datos = obtener_historial(user_id)
+    
+    if len(datos) < 2:
+        await update.message.reply_text("Necesito al menos 2 registros para hacer una gráfica.")
         return
-    fechas = [r[0] for r in reversed(registros)]
-    mente = [r[1] for r in reversed(registros)]
-    alma = [r[2] for r in reversed(registros)]
-    cuerpo = [r[3] for r in reversed(registros)]
+    
+    fechas = [d[0][5:16] for d in datos]
+    cuerpos = [d[1] for d in datos]
+    mentes = [d[2] for d in datos]
+    almas = [d[3] for d in datos]
+    
     plt.figure(figsize=(10, 5))
-    plt.plot(fechas, mente, marker='o', label='Mente', color='blue')
-    plt.plot(fechas, alma, marker='o', label='Alma', color='red')
-    plt.plot(fechas, cuerpo, marker='o', label='Cuerpo', color='green')
-    plt.title('Evolución Mente-Alma-Cuerpo')
+    plt.plot(fechas, cuerpos, marker='o', label='Cuerpo', linewidth=2)
+    plt.plot(fechas, mentes, marker='s', label='Mente', linewidth=2)
+    plt.plot(fechas, almas, marker='^', label='Alma', linewidth=2)
     plt.xlabel('Fecha')
     plt.ylabel('Nivel (1-10)')
+    plt.title('Tu evolución')
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
+    
     buf = io.BytesIO()
-    plt.savefig(buf, format='png')
+    plt.savefig(buf, format='png', dpi=100)
     buf.seek(0)
     plt.close()
-    await update.message.reply_photo(photo=buf, caption="📈 Tu evolución")
+    
+    await update.message.reply_photo(photo=buf, caption="📊 Tu evolución")
+    guardar_conversacion(user_id, "/grafica", "Gráfica enviada", "sistema", "guia")
 
-async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    context.user_data.clear()
-    await update.message.reply_text("🔄 Conversación reiniciada.")
+async def maestro(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Usá: /maestro [nombre]\nEj: /maestro frank suarez")
+        return
+    
+    nombre = " ".join(context.args).lower()
+    
+    if nombre == "lista":
+        texto = listar_maestros()
+        await update.message.reply_text(texto, parse_mode="Markdown")
+        return
+    
+    maestro_info = buscar_maestro(nombre)
+    
+    if maestro_info:
+        respuesta = f"🧠 *{maestro_info['nombre']}*\n\n"
+        respuesta += f"📌 {maestro_info['frase']}\n\n"
+        respuesta += f"✨ *Práctica:* {maestro_info['practica']}\n"
+        if 'area' in maestro_info:
+            respuesta += f"\nÁrea: {maestro_info['area']}"
+        if 'viaje' in maestro_info:
+            respuesta += f"\nViaje: {maestro_info['viaje']}"
+        
+        await update.message.reply_text(respuesta, parse_mode="Markdown")
+        guardar_conversacion(update.effective_user.id, f"/maestro {nombre}", "Maestro invocado", "maestro", "guia")
+    else:
+        await update.message.reply_text("No encontré ese maestro. Probá con /maestro lista")
+
+async def investigar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Usá: /investigar [tema] (ej: /investigar flexibilidad)")
+        return
+    
+    tema = " ".join(context.args)
+    
+    # Buscar en knowledge/habitos/
+    contenido = leer_investigacion("habitos", tema)
+    
+    if contenido:
+        with open(f"knowledge/habitos/{tema}.txt", "rb") as f:
+            await update.message.reply_document(
+                document=f,
+                filename=f"{tema}.txt",
+                caption=f"📚 Investigación sobre {tema}"
+            )
+    else:
+        await update.message.reply_text(f"No encontré investigación para '{tema}'. Usá el script para generarla.")
+    
+    guardar_conversacion(update.effective_user.id, f"/investigar {tema}", "Investigación solicitada", tema, "guia")
+
+async def biografia(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Usá: /biografia [maestro] (ej: /biografia frank suarez)")
+        return
+    
+    tema = " ".join(context.args)
+    
+    # Buscar en knowledge/maestros/
+    contenido = leer_investigacion("maestros", tema)
+    
+    if contenido:
+        with open(f"knowledge/maestros/{tema}.txt", "rb") as f:
+            await update.message.reply_document(
+                document=f,
+                filename=f"{tema}_biografia.txt",
+                caption=f"📚 Biografía de {tema}"
+            )
+    else:
+        await update.message.reply_text(f"No encontré biografía para '{tema}'. Usá el script para generarla.")
+    
+    guardar_conversacion(update.effective_user.id, f"/biografia {tema}", "Biografía solicitada", tema, "guia")
+
+async def rescate(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    from src.core.protocolos import obtener_rescate
+    await update.message.reply_text(obtener_rescate(), parse_mode="Markdown")
+    guardar_conversacion(update.effective_user.id, "/rescate", "Protocolo enviado", "sistema", "guia")
+
+async def valores(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    from src.core.protocolos import check_valores
+    await update.message.reply_text(check_valores(), parse_mode="Markdown")
+    guardar_conversacion(update.effective_user.id, "/valores", "Valores enviados", "sistema", "guia")
+
+async def flujo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    from src.core.protocolos import listar_flujos, obtener_flujo
+    
+    if not context.args:
+        await update.message.reply_text(listar_flujos(), parse_mode="Markdown")
+        return
+    
+    nombre = context.args[0].lower()
+    flujo = obtener_flujo(nombre)
+    
+    if flujo:
+        texto = f"🌀 *{flujo['nombre']}*\n{flujo['descripcion']}\n\n"
+        texto += "🔹 *Secuencia:*\n"
+        for i, m in enumerate(flujo['secuencia'], 1):
+            texto += f"{i}. {m}\n"
+        await update.message.reply_text(texto, parse_mode="Markdown")
+    else:
+        await update.message.reply_text("Flujo no encontrado. Usá /flujo para ver opciones.")
+    
+    guardar_conversacion(update.effective_user.id, f"/flujo {nombre}", "Flujo enviado", "sistema", "guia")
+
+async def microdosis(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        texto = obtener_microdosis_aleatoria()
+        await update.message.reply_text(texto, parse_mode="Markdown")
+        return
+    
+    habito = " ".join(context.args)
+    texto = obtener_microdosis(habito)
+    await update.message.reply_text(f"🧠 *Microdosis para '{habito}':*\n{texto}", parse_mode="Markdown")
+    guardar_conversacion(update.effective_user.id, f"/microdosis {habito}", texto, "microdosis", "guia")
+
+async def perfil(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    perfil = obtener_perfil(user_id)
+    await update.message.reply_text(perfil.obtener_resumen(), parse_mode="Markdown")
+    guardar_conversacion(user_id, "/perfil", "Perfil mostrado", "sistema", "guia")
+
+# ============================================
+# MANEJO DE MENSAJES
+# ============================================
 
 async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     texto = update.message.text
-    user = update.effective_user
-
-    # Verificar checkin
-    if 'checkin_paso' in context.user_data:
-        paso = context.user_data['checkin_paso']
+    perfil = obtener_perfil(user_id)
+    
+    # ========================================
+    # CHECKIN RÁPIDO (formato "7 8 9")
+    # ========================================
+    partes = texto.split()
+    if len(partes) == 3 and all(p.isdigit() for p in partes):
         try:
-            numero = int(texto)
-            if numero < 1 or numero > 10:
-                raise ValueError
+            cuerpo, mente, alma = map(int, partes)
+            if 1 <= cuerpo <= 10 and 1 <= mente <= 10 and 1 <= alma <= 10:
+                guardar_registro(user_id, cuerpo, mente, alma)
+                perfil.actualizar_por_checkin(cuerpo, mente, alma)
+                
+                # Emojis según valores
+                def emoji(valor):
+                    if valor >= 8: return "😊"
+                    elif valor >= 5: return "😐"
+                    else: return "😞"
+                
+                # Mensaje según vibración
+                vibracion = clasificar_vibracion(texto)
+                
+                respuesta = (
+                    f"✅ *Registro guardado*\n\n"
+                    f"Cuerpo: {cuerpo}/10 {emoji(cuerpo)}\n"
+                    f"Mente: {mente}/10 {emoji(mente)}\n"
+                    f"Alma: {alma}/10 {emoji(alma)}\n\n"
+                    f"💬 {vibracion['sugerencia']}\n"
+                    f"✨ {vibracion['frase']}"
+                )
+                
+                await update.message.reply_text(respuesta, parse_mode="Markdown")
+                guardar_conversacion(user_id, texto, respuesta, "checkin", "guia")
+                return
         except:
-            await update.message.reply_text("Responde con un número del 1 al 10.")
-            return
-        if paso == 'mente':
-            context.user_data['mente_temp'] = numero
-            context.user_data['checkin_paso'] = 'alma'
-            await update.message.reply_text("2. *ALMA*: ¿Cómo está tu energía emocional? (1-10)", parse_mode="Markdown")
-        elif paso == 'alma':
-            context.user_data['alma_temp'] = numero
-            context.user_data['checkin_paso'] = 'cuerpo'
-            await update.message.reply_text("3. *CUERPO*: ¿Cómo está tu vitalidad física? (1-10)", parse_mode="Markdown")
-        elif paso == 'cuerpo':
-            guardar_registro(user_id, 
-                           context.user_data['mente_temp'],
-                           context.user_data['alma_temp'],
-                           numero)
-            context.user_data.pop('checkin_paso')
-            await update.message.reply_text("✅ *¡Registro completado!*", parse_mode="Markdown")
-        return
+            pass
+    
+    # ========================================
+    # CLASIFICAR MENSAJE
+    # ========================================
+    clasificacion = await clasificar_con_gemini(texto)
+    tema = clasificacion.get("tema", "otro")
+    estado = clasificacion.get("estado", 5)
+    intencion = clasificacion.get("intencion", "otro")
+    
+    perfil.registrar_tema(tema)
+    
+    # Detectar patrones
+    historial = []  # Aquí iría historial de BD
+    patron = detectar_patron(texto, historial)
+    estado_emo = detectar_estado_emocional(texto)
+    
+    # Elegir modo
+    modo = elegir_modo(estado_emo, patron)
+    
+    # Clasificar vibración
+    vibracion = clasificar_vibracion(texto)
+    
+    # ========================================
+    # GENERAR RESPUESTA
+    # ========================================
+    prompt = f"El usuario dice: '{texto}'. Tema: {tema}. Estado: {estado}/10. Vibración: {vibracion['vibracion']}. {vibracion['sugerencia']}"
+    
+    respuesta_ia = await generar_respuesta_con_ia(prompt, modo)
+    
+    if respuesta_ia:
+        respuesta_final = respuesta_ia
+    else:
+        respuesta_final = "La IA no está disponible. Podés usar /checkin para registrar."
+    
+    # Si hay patrón, agregar frase de confrontación
+    if patron:
+        frase_confrontacion = obtener_frase_confrontacion(modo)
+        respuesta_final = f"{frase_confrontacion}\n\n{respuesta_final}"
+    
+    await update.message.reply_text(respuesta_final)
+    guardar_conversacion(user_id, texto, respuesta_final, tema, modo)
 
-    # Si no es checkin, usar Gemini (si está disponible)
-    if model is None:
-        await update.message.reply_text("La IA no está disponible en este momento. Puedes usar /checkin para registrar.")
-        return
+# ============================================
+# TAREAS PROGRAMADAS
+# ============================================
 
-    try:
-        ultimos = obtener_ultimos_registros(user_id, 3)
-        contexto = ""
-        if ultimos:
-            contexto = "\nRegistros recientes:\n"
-            for fecha, mente, alma, cuerpo in ultimos:
-                contexto += f"- {fecha}: Mente {mente}, Alma {alma}, Cuerpo {cuerpo}\n"
-        prompt = f"""Eres un entrenador consciente, empático pero sincero.
-Nombre del usuario: {user.first_name}
-{contexto}
-Instrucciones:
-- Responde en el MISMO IDIOMA que el usuario use
-- Máximo 3 oraciones
-- Sé cálido pero directo
-- Haz preguntas que inviten a reflexionar
-Mensaje: {texto}
-Respuesta:"""
-        respuesta = model.generate_content(prompt)
-        respuesta_texto = respuesta.text
-        guardar_conversacion(user_id, texto, respuesta_texto)
-        await update.message.reply_text(respuesta_texto)
-    except Exception as e:
-        await update.message.reply_text("Perdón, tuve un problema. ¿Puedes repetir?")
-        print(f"Error: {e}")
+async def verificar_inactividad(context: ContextTypes.DEFAULT_TYPE):
+    inactivos = obtener_usuarios_inactivos(dias=3)
+    def buscar_historial_reciente(user_id, limite=5):
+        """Busca las últimas conversaciones del usuario"""
+        conn = sqlite3.connect('data/bot_data.db')
+        c = conn.cursor()
+        c.execute('''SELECT mensaje, respuesta FROM conversaciones 
+                 WHERE user_id=? ORDER BY fecha DESC LIMIT ?''', (user_id, limite))
+        resultados = c.fetchall()
+        conn.close()
+        return resultados
+
+    for user_id in inactivos:
+        try:
+            await context.bot.send_message(
+                chat_id=user_id,
+                text="Hace días que no hablamos. ¿Todo bien? ¿Quieres retomar algún hábito?"
+            )
+        except:
+            pass
+
+async def recordatorio_proposito(context: ContextTypes.DEFAULT_TYPE):
+    # Obtener usuarios activos
+    conn = sqlite3.connect('data/bot_data.db')
+    c = conn.cursor()
+    c.execute("SELECT DISTINCT user_id FROM conversaciones")
+    usuarios = c.fetchall()
+    conn.close()
+    
+    from src.core.protocolos import VALORES
+    import random
+    
+    for (user_id,) in usuarios:
+        try:
+            valor = random.choice(list(VALORES.values()))
+            mensaje = f"🌅 *Buenos días*\n\n*{valor['nombre']}*: {valor['definicion']}\n\n{valor['pregunta']}"
+            await context.bot.send_message(chat_id=user_id, text=mensaje, parse_mode="Markdown")
+        except:
+            pass
 
 # ============================================
 # INICIAR BOT
 # ============================================
+
 def main():
+    # Inicializar base de datos
     init_db()
+    
+    # Crear carpetas necesarias
+    os.makedirs("knowledge/habitos", exist_ok=True)
+    os.makedirs("knowledge/maestros", exist_ok=True)
+    os.makedirs("data", exist_ok=True)
+    
+    # Crear aplicación
     app = Application.builder().token(TOKEN).build()
+    
+    # Agregar comandos
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("checkin", checkin))
-    app.add_handler(CommandHandler("stats", stats))
+    app.add_handler(CommandHandler("habitos", habitos))
     app.add_handler(CommandHandler("grafica", grafica))
-    app.add_handler(CommandHandler("reset", reset))
+    app.add_handler(CommandHandler("maestro", maestro))
+    app.add_handler(CommandHandler("investigar", investigar))
+    app.add_handler(CommandHandler("biografia", biografia))
+    app.add_handler(CommandHandler("rescate", rescate))
+    app.add_handler(CommandHandler("valores", valores))
+    app.add_handler(CommandHandler("flujo", flujo))
+    app.add_handler(CommandHandler("microdosis", microdosis))
+    app.add_handler(CommandHandler("perfil", perfil))
+    
+    # Manejar mensajes
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, manejar_mensaje))
-    print("🤖 BOT INICIADO! Busca tu bot en Telegram.")
+    
+    # Tareas programadas
+    job_queue = app.job_queue
+    if job_queue:
+        job_queue.run_daily(verificar_inactividad, time=datetime.time(hour=10, minute=0))
+        job_queue.run_daily(recordatorio_proposito, time=datetime.time(hour=8, minute=0))
+    
+    print("🤖 BOT CONSCIENTE v5.0 INICIADO")
     app.run_polling()
 
 if __name__ == "__main__":

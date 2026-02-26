@@ -1,19 +1,19 @@
 # src/core/sistema.py
-# Sistema Operativo de Encarnación Consciente v3.1
+# Sistema Operativo de Encarnacion Consciente v3.1 - Version sin acentos
 
 # ============================================
-# FILOSOFÍA CENTRAL
+# FILOSOFIA CENTRAL
 # ============================================
 
-CREADOR_SOBERANO = "Eres el creador soberano de tu realidad. Tu poder reside en la coherencia dinámica entre Pensamiento-Emoción-Acción."
+CREADOR_SOBERANO = "Eres el creador soberano de tu realidad. Tu poder reside en la coherencia dinamica entre Pensamiento-Emocion-Accion."
 
-PRINCIPIO_TRINITARIO = "Cuerpo, Mente y Alma están siempre presentes como tres expresiones del mismo flujo consciente."
+PRINCIPIO_TRINITARIO = "Cuerpo, Mente y Alma estan siempre presentes como tres expresiones del mismo flujo consciente."
 
 PRINCIPIO_ESPEJO = """
 INTERIOR = EXTERIOR
-Cuerpo ? Salud
-Mente ? Finanzas/Negocios
-Alma ? Relaciones
+Cuerpo â†” Salud
+Mente â†” Finanzas/Negocios
+Alma â†” Relaciones
 """
 
 # ============================================
@@ -22,8 +22,8 @@ Alma ? Relaciones
 
 VALORES = [
     "DISCIPLINA: Fuerza de coherencia interna que mantiene tu rumbo",
-    "RESPONSABILIDAD: Capacidad de responder creativamente ante cualquier situación",
-    "EMPATÍA: Resonancia consciente con límites claros"
+    "RESPONSABILIDAD: Capacidad de responder creativamente ante cualquier situacion",
+    "EMPATIA: Resonancia consciente con limites claros"
 ]
 
 # ============================================
@@ -31,9 +31,9 @@ VALORES = [
 # ============================================
 
 SEMILLAS = {
-    "ORQUESTADOR": "Visión panorámica y coherencia global",
-    "MEGA": "Investigación profunda y expansión",
-    "CREACIÓN": "Materialización consciente"
+    "ORQUESTADOR": "Vision panoramica y coherencia global",
+    "MEGA": "Investigacion profunda y expansion",
+    "CREACION": "Materializacion consciente"
 }
 
 # ============================================
@@ -41,10 +41,10 @@ SEMILLAS = {
 # ============================================
 
 CUBOS = {
-    "interior_positivo": "Pensamiento-Emoción-Acción en coherencia",
-    "exterior_positivo": "Salud-Negocios-Relaciones en armonía",
-    "interior_negativo": "Sombras como sistema inmunológico",
-    "exterior_negativo": "Conflictos como campo de maestría"
+    "interior_positivo": "Pensamiento-Emocion-Accion en coherencia",
+    "exterior_positivo": "Salud-Negocios-Relaciones en armonia",
+    "interior_negativo": "Sombras como sistema inmunologico",
+    "exterior_negativo": "Conflictos como campo de maestria"
 }
 
 def estado_en_cubo(pensamiento, emocion, accion):
@@ -57,20 +57,20 @@ def estado_en_cubo(pensamiento, emocion, accion):
         return "zona_de_crecimiento"
 
 # ============================================
-# PROTOCOLO DE RESCATE (versión texto)
+# PROTOCOLO DE RESCATE (version texto)
 # ============================================
 
 PROTOCOLO_RESCATE_TEXTO = """
-?? PROTOCOLO DE RESCATE (3 minutos)
+ðŸ†˜ PROTOCOLO DE RESCATE (3 minutos)
 
 Minuto 1 - Guerrero:
-   Anclate en el cuerpo. Respirá. Sentí tus pies.
+   Anclate en el cuerpo. Respira. Siente tus pies.
 
 Minuto 2 - Mago:
-   Soltá la emoción estancada. Exhalá profundo.
+   Suelta la emocion estancada. Exhala profundo.
 
 Minuto 3 - Arquero:
-   Definí UNA acción concreta. Hacela.
+   Define UNA accion concreta. Hazla.
 """
 
 # ============================================
@@ -88,7 +88,7 @@ def polo_opuesto(cualidad, valor):
     return opuestos.get(cualidad.lower(), "desconocido")
 
 # ============================================
-# DIAGNÓSTICO INICIAL
+# DIAGNOSTICO INICIAL
 # ============================================
 
 DIAGNOSTICO_INICIAL = {
@@ -99,7 +99,7 @@ DIAGNOSTICO_INICIAL = {
 
 def obtener_diagnostico():
     return f"""
-    ?? DIAGNÓSTICO INICIAL
+    ðŸ“Š DIAGNOSTICO INICIAL
     Alma: nivel {DIAGNOSTICO_INICIAL['alma']} (vibra alto)
     Cuerpo: nivel {DIAGNOSTICO_INICIAL['cuerpo']} (funcional)
     Mente: nivel {DIAGNOSTICO_INICIAL['mente']} (por entrenar)

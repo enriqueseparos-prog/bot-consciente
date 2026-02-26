@@ -1,5 +1,5 @@
 # src/core/maestros.py
-# Maestros externos, internos y civilizaciones - Versión completa
+# Maestros externos, internos y civilizaciones - Version sin acentos
 
 # ============================================
 # MAESTROS EXTERNOS (personas reales)
@@ -8,165 +8,165 @@
 MAESTROS_EXTERNOS = {
     # ======== SALUD ========
     "frank suarez": {
-        "nombre": "Frank Suárez",
+        "nombre": "Frank Suarez",
         "area": "salud",
-        "frase": "El metabolismo es la base de toda energía. Sin metabolismo sano, no hay hábito que sostenga.",
-        "practica": "Tomá un vaso de agua con una pizca de sal al despertar.",
-        "logros": "Metabolismo, hormonas, sueño, hígado graso"
+        "frase": "El metabolismo es la base de toda energia. Sin metabolismo sano, no hay habito que sostenga.",
+        "practica": "Toma un vaso de agua con una pizca de sal al despertar.",
+        "logros": "Metabolismo, hormonas, sueno, higado graso"
     },
     "nathaly marcus": {
         "nombre": "Nathaly Marcus",
         "area": "salud",
         "frase": "El ciclo hormonal femenino no es un problema a resolver, sino un ritmo a comprender.",
-        "practica": "Observá en qué fase de tu ciclo estás y ajustá tu energía.",
-        "logros": "Ciclo hormonal, adrenales, inflamación"
+        "practica": "Observa en que fase de tu ciclo estas y ajusta tu energia.",
+        "logros": "Ciclo hormonal, adrenales, inflamacion"
     },
     "ludwig johnson": {
         "nombre": "Ludwig Johnson",
         "area": "salud",
-        "frase": "La insulina es la llave maestra del metabolismo. Controlala y controlarás tu energía.",
-        "practica": "Ayuná 12 horas entre cena y desayuno.",
+        "frase": "La insulina es la llave maestra del metabolismo. Controlala y controlaras tu energia.",
+        "practica": "Ayuna 12 horas entre cena y desayuno.",
         "logros": "Insulina, ayuno, cetosis"
     },
     "barbara onely": {
         "nombre": "Barbara Onely",
         "area": "salud",
-        "frase": "La empatía es una herramienta de sanación, no solo una emoción.",
-        "practica": "Escuchá a alguien sin juzgar, solo sintiendo.",
-        "logros": "Empatía sanadora, escucha corporal"
+        "frase": "La empatia es una herramienta de sanacion, no solo una emocion.",
+        "practica": "Escucha a alguien sin juzgar, solo sintiendo.",
+        "logros": "Empatia sanadora, escucha corporal"
     },
     
     # ======== MENTE ========
     "vishen lakhiani": {
         "nombre": "Vishen Lakhiani",
         "area": "mente",
-        "frase": "Las reglas culturales no son leyes. Podés cuestionarlas y crear las tuyas.",
-        "practica": "Escribí una regla que te impusieron y decidí si la querés mantener.",
-        "logros": "Cuestionar reglas, experiencias cumbre, meditación"
+        "frase": "Las reglas culturales no son leyes. Puedes cuestionarlas y crear las tuyas.",
+        "practica": "Escribe una regla que te impusieron y decide si la quieres mantener.",
+        "logros": "Cuestionar reglas, experiencias cumbre, meditacion"
     },
     "lain garcia calvo": {
-        "nombre": "Laín García Calvo",
+        "nombre": "Lain Garcia Calvo",
         "area": "mente",
-        "frase": "La resistencia es ilusión. Lo que resistes, persiste.",
-        "practica": "Observá qué estás resistiendo hoy y soltalo por un momento.",
-        "logros": "No-dualidad, disolución del ego"
+        "frase": "La resistencia es ilusion. Lo que resistes, persiste.",
+        "practica": "Observa que estas resistiendo hoy y sueltalo por un momento.",
+        "logros": "No-dualidad, disolucion del ego"
     },
     "jim kwik": {
         "nombre": "Jim Kwik",
         "area": "mente",
         "frase": "El conocimiento no es poder. El conocimiento aplicado es poder.",
-        "practica": "Usá el dedo para guiar la lectura y aumentá velocidad.",
+        "practica": "Usa el dedo para guiar la lectura y aumenta velocidad.",
         "logros": "Neuroplasticidad, memoria, enfoque"
     },
     "mario alonso puig": {
         "nombre": "Mario Alonso Puig",
         "area": "mente",
-        "frase": "El miedo es un mal consejero. Detrás del miedo siempre hay un deseo.",
-        "practica": "Cuando sientas miedo, preguntate: ¿qué deseo está detrás?",
-        "logros": "Miedos automáticos, neurociencia aplicada"
+        "frase": "El miedo es un mal consejero. Detras del miedo siempre hay un deseo.",
+        "practica": "Cuando sientas miedo, preguntate: ?que deseo esta detras?",
+        "logros": "Miedos automaticos, neurociencia aplicada"
     },
     
     # ======== RELACIONES ========
     "marshall rosenberg": {
         "nombre": "Marshall Rosenberg",
         "area": "relaciones",
-        "frase": "Detrás de toda crítica hay una necesidad no expresada.",
-        "practica": "Hoy, cuando critiques a alguien, buscá la necesidad detrás.",
-        "logros": "Comunicación NoViolenta (CNV)"
+        "frase": "Detras de toda critica hay una necesidad no expresada.",
+        "practica": "Hoy, cuando critiques a alguien, busca la necesidad detras.",
+        "logros": "Comunicacion NoViolenta (CNV)"
     },
     "john gottman": {
         "nombre": "John Gottman",
         "area": "relaciones",
-        "frase": "Los 4 jinetes del apocalipsis relacional: crítica, desprecio, actitud defensiva y evasión.",
-        "practica": "Identificá qué jinete apareció hoy en tus relaciones.",
+        "frase": "Los 4 jinetes del apocalipsis relacional: critica, desprecio, actitud defensiva y evasion.",
+        "practica": "Identifica que jinete aparecio hoy en tus relaciones.",
         "logros": "Los 4 jinetes, terapia de pareja"
     },
     "carl rogers": {
         "nombre": "Carl Rogers",
         "area": "relaciones",
-        "frase": "La aceptación positiva incondicional es la base de toda relación sanadora.",
-        "practica": "Aceptá a alguien hoy sin querer cambiarlo.",
-        "logros": "Aceptación positiva, psicología humanista"
+        "frase": "La aceptacion positiva incondicional es la base de toda relacion sanadora.",
+        "practica": "Acepta a alguien hoy sin querer cambiarlo.",
+        "logros": "Aceptacion positiva, psicologia humanista"
     },
     "thich nhat hanh": {
         "nombre": "Thich Nhat Hanh",
         "area": "relaciones",
         "frase": "El mayor regalo que puedes dar a alguien es tu presencia plena.",
-        "practica": "Cuando hables con alguien hoy, dejá el teléfono y escuchá.",
+        "practica": "Cuando hables con alguien hoy, deja el telefono y escucha.",
         "logros": "Mindfulness en relaciones, paz interior"
     },
     "bert hellinger": {
         "nombre": "Bert Hellinger",
         "area": "relaciones",
         "frase": "En cada familia hay un orden. Cuando lo respetas, el amor fluye.",
-        "practica": "Honrá a tus padres aunque no sean perfectos.",
+        "practica": "Honra a tus padres aunque no sean perfectos.",
         "logros": "Constelaciones familiares"
     },
     
     # ======== UNIVERSALES ========
     "salomon": {
-        "nombre": "Rey Salomón",
+        "nombre": "Rey Salomon",
         "area": "universal",
-        "frase": "El discernimiento es saber cuándo hablar y cuándo callar.",
-        "practica": "Antes de hablar hoy, preguntate: ¿esto suma o resta?",
-        "logros": "Sabiduría, gobierno interno"
+        "frase": "El discernimiento es saber cuando hablar y cuando callar.",
+        "practica": "Antes de hablar hoy, preguntate: ?esto suma o resta?",
+        "logros": "Sabiduria, gobierno interno"
     },
     "buda": {
         "nombre": "Buda",
         "area": "universal",
         "frase": "El deseo es la causa del sufrimiento. El desapego, la causa de la paz.",
-        "practica": "Observá un deseo hoy sin actuar en él.",
-        "logros": "Camino medio, desapego, compasión"
+        "practica": "Observa un deseo hoy sin actuar en el.",
+        "logros": "Camino medio, desapego, compasion"
     },
     "jesus": {
-        "nombre": "Jesús",
+        "nombre": "Jesus",
         "area": "universal",
         "frase": "Amaos los unos a los otros como yo os he amado.",
-        "practica": "Hoy, hacé algo por alguien sin esperar nada a cambio.",
+        "practica": "Hoy, haz algo por alguien sin esperar nada a cambio.",
         "logros": "Amor incondicional, servicio"
     },
     "lao tzu": {
         "nombre": "Lao Tzu",
         "area": "universal",
         "frase": "El que sabe no habla. El que habla no sabe.",
-        "practica": "Actuá hoy sin forzar, como el agua que fluye.",
-        "logros": "Taoísmo, Wu Wei"
+        "practica": "Actua hoy sin forzar, como el agua que fluye.",
+        "logros": "Taoismo, Wu Wei"
     },
     "marie kondo": {
         "nombre": "Marie Kondo",
         "area": "universal",
-        "frase": "Ordena tu espacio y ordenarás tu mente.",
-        "practica": "Agradécele a un objeto antes de soltarlo.",
-        "logros": "Método KonMari"
+        "frase": "Ordena tu espacio y ordenaras tu mente.",
+        "practica": "Agradecele a un objeto antes de soltarlo.",
+        "logros": "Metodo KonMari"
     },
     
     # ======== INVESTIGADORES ========
     "carl jung": {
         "nombre": "Carl Jung",
         "area": "mente",
-        "frase": "Hasta que no hagas consciente tu inconsciente, este dirigirá tu vida y lo llamarás destino.",
-        "practica": "Preguntate: ¿qué sombra estoy proyectando hoy en otros?",
+        "frase": "Hasta que no hagas consciente tu inconsciente, este dirigira tu vida y lo llamaras destino.",
+        "practica": "Preguntate: ?que sombra estoy proyectando hoy en otros?",
         "logros": "Sombra, arquetipos"
     },
     "joseph campbell": {
         "nombre": "Joseph Campbell",
         "area": "universal",
-        "frase": "Sigue tu felicidad y el universo te abrirá puertas donde solo había muros.",
-        "practica": "¿Qué te haría feliz hoy, así sea por 5 minutos? Hacelo.",
-        "logros": "El viaje del héroe"
+        "frase": "Sigue tu felicidad y el universo te abrira puertas donde solo habia muros.",
+        "practica": "?Que te haria feliz hoy, asi sea por 5 minutos? Hazlo.",
+        "logros": "El viaje del heroe"
     },
     "krishnamurti": {
         "nombre": "Jiddu Krishnamurti",
         "area": "mente",
         "frase": "La verdad es una tierra sin caminos.",
-        "practica": "Observá un pensamiento sin juzgarlo, solo como testigo.",
-        "logros": "Libertad psicológica"
+        "practica": "Observa un pensamiento sin juzgarlo, solo como testigo.",
+        "logros": "Libertad psicologica"
     },
     "gurdjieff": {
         "nombre": "Gurdjieff",
         "area": "mente",
-        "frase": "El hombre es una máquina. Todo ocurre. Nadie hace nada.",
-        "practica": "Observá hoy cuántas veces actuás en automático.",
+        "frase": "El hombre es una maquina. Todo ocurre. Nadie hace nada.",
+        "practica": "Observa hoy cuantas veces actuas en automatico.",
         "logros": "Cuarto camino"
     }
 }
@@ -180,55 +180,55 @@ MAESTROS_INTERNOS = {
         "nombre": "INCA",
         "viaje": "Cuerpo ? Cuerpo",
         "frase": "Mi cuerpo es territorio sagrado. Lo honro con presencia.",
-        "practica": "Hoy, sentí tus pies en el suelo y agradecé tu cuerpo."
+        "practica": "Hoy, siente tus pies en el suelo y agradece tu cuerpo."
     },
     "bushido": {
         "nombre": "BUSHIDO",
         "viaje": "Cuerpo ? Mente",
-        "frase": "La disciplina encarnada es el puente entre intención y acción.",
-        "practica": "Hoy, hacé una cosa que sabés que debés hacer aunque no tengas ganas."
+        "frase": "La disciplina encarnada es el puente entre intencion y accion.",
+        "practica": "Hoy, haz una cosa que sabes que debes hacer aunque no tengas ganas."
     },
     "sadhu": {
         "nombre": "SADHU",
         "viaje": "Cuerpo ? Alma",
         "frase": "El cuerpo es el templo donde el alma se expresa.",
-        "practica": "Hoy, mové tu cuerpo con devoción, como un ritual."
+        "practica": "Hoy, mueve tu cuerpo con devocion, como un ritual."
     },
     "estoico": {
         "nombre": "ESTOICO",
         "viaje": "Mente ? Cuerpo",
-        "frase": "No son las cosas las que nos perturban, sino la opinión que tenemos de ellas.",
-        "practica": "Hoy, ante una molestia, preguntate: ¿esto depende de mí?"
+        "frase": "No son las cosas las que nos perturban, sino la opinion que tenemos de ellas.",
+        "practica": "Hoy, ante una molestia, preguntate: ?esto depende de mi?"
     },
     "socrates": {
-        "nombre": "SÓCRATES",
+        "nombre": "SOCRATES",
         "viaje": "Mente ? Mente",
-        "frase": "Solo sé que no sé nada. El cuestionamiento es el camino.",
-        "practica": "Hoy, cuestioná una creencia que das por sentada."
+        "frase": "Solo se que no se nada. El cuestionamiento es el camino.",
+        "practica": "Hoy, cuestiona una creencia que das por sentada."
     },
     "san francisco": {
         "nombre": "SAN FRANCISCO",
         "viaje": "Mente ? Alma",
         "frase": "Es dando que recibimos. El amor activo transforma.",
-        "practica": "Hoy, hacé algo bueno por alguien en silencio."
+        "practica": "Hoy, haz algo bueno por alguien en silencio."
     },
     "tantrico": {
-        "nombre": "TÁNTRICO",
+        "nombre": "TANTRICO",
         "viaje": "Alma ? Cuerpo",
         "frase": "Lo divino se encarna. El placer es sagrado.",
-        "practica": "Hoy, permitite sentir placer en algo simple."
+        "practica": "Hoy, permitete sentir placer en algo simple."
     },
     "maya": {
         "nombre": "MAYA",
         "viaje": "Alma ? Mente",
-        "frase": "Todo tiene un patrón. La sincronicidad es el lenguaje del alma.",
-        "practica": "Hoy, prestá atención a las casualidades significativas."
+        "frase": "Todo tiene un patron. La sincronicidad es el lenguaje del alma.",
+        "practica": "Hoy, presta atencion a las casualidades significativas."
     },
     "chaman": {
-        "nombre": "CHAMÁN",
+        "nombre": "CHAMAN",
         "viaje": "Alma ? Alma",
-        "frase": "La conexión directa con lo sagrado es posible sin intermediarios.",
-        "practica": "Hoy, conectá con algo más grande que vos (naturaleza, universo, Dios)."
+        "frase": "La conexion directa con lo sagrado es posible sin intermediarios.",
+        "practica": "Hoy, conecta con algo mas grande que vos (naturaleza, universo, Dios)."
     }
 }
 
@@ -238,49 +238,49 @@ MAESTROS_INTERNOS = {
 
 CIVILIZACIONES = {
     "filosofia china": {
-        "nombre": "Filosofía China",
-        "enseñanza": "El Yin-Yang, el I Ching y el Tao nos recuerdan que todo contiene su opuesto.",
-        "practica": "Hoy, cuando enfrentes un conflicto, buscá el punto medio."
+        "nombre": "Filosofia China",
+        "ensenanza": "El Yin-Yang, el I Ching y el Tao nos recuerdan que todo contiene su opuesto.",
+        "practica": "Hoy, cuando enfrentes un conflicto, busca el punto medio."
     },
     "sabiduria andina": {
-        "nombre": "Sabiduría Andina",
-        "enseñanza": "El Ayni es la reciprocidad: dar y recibir en equilibrio con la vida.",
-        "practica": "Hoy, agradecé a la tierra (Pachamama) por lo que te da."
+        "nombre": "Sabiduria Andina",
+        "ensenanza": "El Ayni es la reciprocidad: dar y recibir en equilibrio con la vida.",
+        "practica": "Hoy, agradece a la tierra (Pachamama) por lo que te da."
     },
     "cosmologia maya": {
-        "nombre": "Cosmología Maya",
-        "enseñanza": "El tiempo es sagrado y cíclico. Cada día tiene una energía única.",
-        "practica": "Observá qué energía trae hoy para vos."
+        "nombre": "Cosmologia Maya",
+        "ensenanza": "El tiempo es sagrado y ciclico. Cada dia tiene una energia unica.",
+        "practica": "Observa que energia trae hoy para vos."
     },
     "tradicion hindu": {
-        "nombre": "Tradición Hindú",
-        "enseñanza": "Los chakras son centros de energía que conectan cuerpo y espíritu.",
+        "nombre": "Tradicion Hindu",
+        "ensenanza": "Los chakras son centros de energia que conectan cuerpo y espiritu.",
         "practica": "Hoy, enfocate en un chakra que sientas bloqueado."
     },
     "filosofia griega": {
-        "nombre": "Filosofía Griega",
-        "enseñanza": "El estoicismo nos enseña a distinguir lo que controlamos de lo que no.",
-        "practica": "Hoy, aceptá lo que no podés cambiar y actuá en lo que sí."
+        "nombre": "Filosofia Griega",
+        "ensenanza": "El estoicismo nos ensena a distinguir lo que controlamos de lo que no.",
+        "practica": "Hoy, acepta lo que no puedes cambiar y actua en lo que si."
     },
-    "cristianismo místico": {
-        "nombre": "Cristianismo Místico",
-        "enseñanza": "La Trinidad es un reflejo de cuerpo, mente y alma en unidad.",
-        "practica": "Hoy, buscá coherencia entre lo que pensás, sentís y hacés."
+    "cristianismo mistico": {
+        "nombre": "Cristianismo Mistico",
+        "ensenanza": "La Trinidad es un reflejo de cuerpo, mente y alma en unidad.",
+        "practica": "Hoy, busca coherencia entre lo que piensas, sientes y haces."
     },
     "budismo tibetano": {
         "nombre": "Budismo Tibetano",
-        "enseñanza": "La compasión es el deseo de que todos los seres se liberen del sufrimiento.",
-        "practica": "Hoy, deseale bienestar a alguien que te cuesta."
+        "ensenanza": "La compasion es el deseo de que todos los seres se liberen del sufrimiento.",
+        "practica": "Hoy, desea bienestar a alguien que te cuesta."
     },
     "chamanismo": {
         "nombre": "Chamanismo",
-        "enseñanza": "Todo tiene espíritu y todo está conectado.",
-        "practica": "Hoy, conectá con la naturaleza aunque sea 5 minutos."
+        "ensenanza": "Todo tiene espiritu y todo esta conectado.",
+        "practica": "Hoy, conecta con la naturaleza aunque sea 5 minutos."
     }
 }
 
 # ============================================
-# FUNCIÓN DE BÚSQUEDA
+# FUNCION DE BUSQUEDA
 # ============================================
 
 def buscar_maestro(nombre):
@@ -299,7 +299,7 @@ def buscar_maestro(nombre):
     if nombre in CIVILIZACIONES:
         return CIVILIZACIONES[nombre]
     
-    # Búsqueda aproximada (contiene)
+    # Busqueda aproximada (contiene)
     for key, valor in {**MAESTROS_EXTERNOS, **MAESTROS_INTERNOS, **CIVILIZACIONES}.items():
         if nombre in key or key in nombre:
             return valor
@@ -312,8 +312,8 @@ def listar_maestros():
     internos = list(MAESTROS_INTERNOS.keys())
     civs = list(CIVILIZACIONES.keys())
     
-    texto = "?? *MAESTROS DISPONIBLES*\n\n"
-    texto += "*Externos:*\n" + "\n".join([f"• {m.title()}" for m in externos[:10]]) + "\n\n"
-    texto += "*Internos:*\n" + "\n".join([f"• {m.upper()}" for m in internos]) + "\n\n"
-    texto += "*Civilizaciones:*\n" + "\n".join([f"• {c.title()}" for c in civs]) + "\n"
+    texto = "ðŸ“š *MAESTROS DISPONIBLES*\n\n"
+    texto += "*Externos:*\n" + "\n".join([f"â€¢ {m.title()}" for m in externos[:10]]) + "\n\n"
+    texto += "*Internos:*\n" + "\n".join([f"â€¢ {m.upper()}" for m in internos]) + "\n\n"
+    texto += "*Civilizaciones:*\n" + "\n".join([f"â€¢ {c.title()}" for c in civs]) + "\n"
     return texto

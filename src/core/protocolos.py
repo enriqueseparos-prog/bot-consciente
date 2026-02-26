@@ -1,5 +1,5 @@
 # src/core/protocolos.py
-# Protocolos esenciales del sistema consciente
+# Protocolos esenciales del sistema consciente - Version sin acentos
 
 # ============================================
 # PROTOCOLO DE RESCATE (3 minutos)
@@ -8,32 +8,32 @@
 PROTOCOLO_RESCATE = {
     "minuto_1": {
         "nombre": "Guerrero",
-        "accion": "Anclaje fÌsico",
-        "descripcion": "Conect· con tu respiraciÛn. SentÌ tus pies en el suelo. Tom· conciencia de tu cuerpo aquÌ y ahora.",
+        "accion": "Anclaje fisico",
+        "descripcion": "Conecta con tu respiracion. Siente tus pies en el suelo. Toma conciencia de tu cuerpo aqui y ahora.",
         "comando": ">> system.anchor(physical, here_and_now)"
     },
     "minuto_2": {
         "nombre": "Mago",
-        "accion": "LiberaciÛn energÈtica",
-        "descripcion": "Identific· la emociÛn estancada. Exhal· profundo y soltala. SentÌ cÛmo la energÌa fluye.",
+        "accion": "Liberacion energetica",
+        "descripcion": "Identifica la emocion estancada. Exhala profundo y sueltala. Siente como la energia fluye.",
         "comando": ">> energy.flush(stagnant, all)"
     },
     "minuto_3": {
         "nombre": "Arquero",
-        "accion": "AcciÛn concreta",
-        "descripcion": "DefinÌ la prÛxima acciÛn m·s pequeÒa y tangible. Una sola cosa que podÈs hacer ahora.",
+        "accion": "Accion concreta",
+        "descripcion": "Define la proxima accion mas pequena y tangible. Una sola cosa que puedes hacer ahora.",
         "comando": ">> task.define(next_action, smallest_physical)"
     }
 }
 
 def obtener_rescate():
     """Devuelve el protocolo completo formateado"""
-    texto = "?? *PROTOCOLO DE RESCATE (3 minutos)*\n\n"
+    texto = "üÜò *PROTOCOLO DE RESCATE (3 minutos)*\n\n"
     for minuto, datos in PROTOCOLO_RESCATE.items():
         texto += f"*{minuto.replace('_', ' ').upper()}* - {datos['nombre']}\n"
-        texto += f"?? {datos['accion']}\n"
-        texto += f"?? {datos['descripcion']}\n"
-        texto += f"? `{datos['comando']}`\n\n"
+        texto += f"üìå {datos['accion']}\n"
+        texto += f"üí¨ {datos['descripcion']}\n"
+        texto += f"‚ö° `{datos['comando']}`\n\n"
     return texto
 
 # ============================================
@@ -42,34 +42,34 @@ def obtener_rescate():
 
 FLUJOS_MAESTROS = {
     "manifestacion": {
-        "nombre": "ManifestaciÛn",
-        "secuencia": ["SÛcrates", "San Francisco", "Cham·n", "T·ntrico", "Inca", "Bushido"],
-        "descripcion": "Para llevar una idea del plano mental al mundo fÌsico"
+        "nombre": "Manifestacion",
+        "secuencia": ["Socrates", "San Francisco", "Chaman", "Tantrico", "Inca", "Bushido"],
+        "descripcion": "Para llevar una idea del plano mental al mundo fisico"
     },
     "recepcion": {
-        "nombre": "RecepciÛn",
-        "secuencia": ["SÛcrates", "Estoico", "Inca", "Sadhu", "Cham·n", "Maya"],
+        "nombre": "Recepcion",
+        "secuencia": ["Socrates", "Estoico", "Inca", "Sadhu", "Chaman", "Maya"],
         "descripcion": "Para integrar una experiencia del cuerpo a la conciencia"
     },
     "integracion": {
-        "nombre": "IntegraciÛn",
-        "secuencia": ["Inca", "Bushido", "Estoico", "SÛcrates", "San Francisco", "Cham·n"],
-        "descripcion": "Para armonizar cuerpo, mente y alma despuÈs de un desafÌo"
+        "nombre": "Integracion",
+        "secuencia": ["Inca", "Bushido", "Estoico", "Socrates", "San Francisco", "Chaman"],
+        "descripcion": "Para armonizar cuerpo, mente y alma despues de un desafio"
     },
     "expresion": {
-        "nombre": "ExpresiÛn",
-        "secuencia": ["Cham·n", "Maya", "T·ntrico", "Sadhu", "Bushido", "Inca"],
-        "descripcion": "Para que el alma se exprese a travÈs del cuerpo en el mundo"
+        "nombre": "Expresion",
+        "secuencia": ["Chaman", "Maya", "Tantrico", "Sadhu", "Bushido", "Inca"],
+        "descripcion": "Para que el alma se exprese a traves del cuerpo en el mundo"
     }
 }
 
 def obtener_flujo(nombre):
-    """Devuelve un flujo especÌfico"""
+    """Devuelve un flujo especifico"""
     return FLUJOS_MAESTROS.get(nombre.lower())
 
 def listar_flujos():
     """Devuelve lista de flujos disponibles"""
-    texto = "?? *FLUJOS MAESTROS DISPONIBLES*\n\n"
+    texto = "üåÄ *FLUJOS MAESTROS DISPONIBLES*\n\n"
     for key, flujo in FLUJOS_MAESTROS.items():
         texto += f"*{flujo['nombre']}*: {flujo['descripcion']}\n"
         texto += f"`/flujo {key}`\n\n"
@@ -82,24 +82,24 @@ def listar_flujos():
 VALORES = {
     "disciplina": {
         "nombre": "DISCIPLINA",
-        "definicion": "Fuerza de coherencia interna que mantiene tu rumbo incluso cuando es difÌcil.",
-        "pregunta": "øHoy actuÈ con disciplina o dejÈ que la pereza ganara?"
+        "definicion": "Fuerza de coherencia interna que mantiene tu rumbo incluso cuando es dificil.",
+        "pregunta": "¬øHoy actue con disciplina o deje que la pereza ganara?"
     },
     "responsabilidad": {
         "nombre": "RESPONSABILIDAD",
-        "definicion": "Capacidad de responder creativamente (no reaccionar autom·ticamente) ante cualquier situaciÛn.",
-        "pregunta": "øHoy respondÌ desde la conciencia o reaccionÈ desde el autom·tico?"
+        "definicion": "Capacidad de responder creativamente (no reaccionar automaticamente) ante cualquier situacion.",
+        "pregunta": "¬øHoy respondi desde la conciencia o reaccione desde el automatico?"
     },
     "empatia": {
-        "nombre": "EMPATÕA",
-        "definicion": "Resonancia consciente con lÌmites claros. Sentir al otro sin perder tu centro.",
-        "pregunta": "øHoy pude sentir al otro sin perderme a mÌ mismo?"
+        "nombre": "EMPATIA",
+        "definicion": "Resonancia consciente con limites claros. Sentir al otro sin perder tu centro.",
+        "pregunta": "¬øHoy pude sentir al otro sin perderme a mi mismo?"
     }
 }
 
 def check_valores():
-    """Devuelve las tres preguntas para auto-evaluaciÛn diaria"""
-    texto = "?? *TUS VALORES HOY*\n\n"
+    """Devuelve las tres preguntas para auto-evaluacion diaria"""
+    texto = "‚öñÔ∏è *TUS VALORES HOY*\n\n"
     for v in VALORES.values():
         texto += f"*{v['nombre']}*\n{v['pregunta']}\n\n"
     return texto
@@ -109,14 +109,14 @@ def check_valores():
 # ============================================
 
 def explicar_polo_opuesto():
-    return """?? *ESCALA DE POLO OPUESTO (-9 a +9)*
+    return """üìä *ESCALA DE POLO OPUESTO (-9 a +9)*
 
-Cada cualidad tiene su opuesto. La maestrÌa es habitar conscientemente el rango completo.
+Cada cualidad tiene su opuesto. La maestria es habitar conscientemente el rango completo.
 
 Ejemplo:
 -9 Miedo ............. 0 ............. +9 Amor
--9 Odio .............. 0 ............. +9 AceptaciÛn
+-9 Odio .............. 0 ............. +9 Aceptacion
 -9 Pereza ............. 0 ............. +9 Disciplina
 
-Hoy, øen quÈ n˙mero est·s? No para juzgarte, sino para observar.
+Hoy, ¬øen que numero estas? No para juzgarte, sino para observar.
 """

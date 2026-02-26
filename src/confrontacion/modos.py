@@ -1,41 +1,41 @@
 # src/confrontacion/modos.py
-# Modos de confrontación
+# Modos de confrontacion - Version sin acentos
 
 MODOS = {
     "acompanante": {
-        "nombre": "Acompañante",
-        "tono": "suave, empático, cálido",
+        "nombre": "Acompanante",
+        "tono": "suave, empatico, calido",
         "objetivo": "Contener y sostener",
         "frases_clave": [
-            "Te escucho, ¿quieres contarme más?",
-            "Está bien sentirse así. ¿Qué necesitas ahora?",
-            "No estás solo en esto. Estoy aquí."
+            "Te escucho, Â¿quieres contarme mas?",
+            "Esta bien sentirse asi. Â¿Que necesitas ahora?",
+            "No estas solo en esto. Estoy aqui."
         ]
     },
     "estoico": {
         "nombre": "Estoico",
-        "tono": "directo, filosófico, desafiante",
+        "tono": "directo, filosofico, desafiante",
         "objetivo": "Confrontar patrones",
         "frases_clave": [
-            "Si no puedes cambiar lo que pasa, cambia cómo lo interpretas.",
-            "El obstáculo es el camino.",
+            "Si no puedes cambiar lo que pasa, cambia como lo interpretas.",
+            "El obstaculo es el camino.",
             "No son las cosas las que te perturban, sino tu juicio sobre ellas."
         ]
     },
     "socratico": {
-        "nombre": "Socrático",
-        "tono": "preguntón, indagador, profundo",
+        "nombre": "Socratico",
+        "tono": "pregunton, indagador, profundo",
         "objetivo": "Hacer pensar",
         "frases_clave": [
-            "¿Qué crees que pasaría si...?",
-            "¿Qué evidencia tienes de eso?",
-            "Si un amigo estuviera en tu lugar, ¿qué le dirías?"
+            "Â¿Que crees que pasaria si...?",
+            "Â¿Que evidencia tienes de eso?",
+            "Si un amigo estuviera en tu lugar, Â¿que le dirias?"
         ]
     }
 }
 
 def elegir_modo(estado_usuario, patron_detectado):
-    """Elige el modo según el estado y patrón"""
+    """Elige el modo segun el estado y patron"""
     if patron_detectado and patron_detectado.get("tipo") == "baja_vibracion":
         if estado_usuario.get("estado") in ["tristeza", "ansiedad"]:
             return "acompanante"
