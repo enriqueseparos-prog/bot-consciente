@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from src.memoria.recordatorios import SistemaRecordatorios, procesar_comando_recordatorio
+from src.puntos_14 import grupo1, grupo2, grupo3, grupo4, grupo5
 
 # Configuración de logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -403,6 +405,41 @@ async def perfil(update: Update, context: ContextTypes.DEFAULT_TYPE):
     guardar_conversacion(user_id, "/perfil", "Perfil mostrado", "sistema", "guia")
 
 # ============================================
+# FUNCIÓN PARA LOS 14 PUNTOS
+# ============================================
+
+def aplicar_punto_segun_contexto(texto, tema, estado):
+    """Elige un punto de los 14 según el contexto"""
+    import random
+    
+    # Puntos de perspectiva (1-3) para problemas
+    if "problema" in texto or "difícil" in texto or "no puedo" in texto:
+        punto = random.choice([grupo1.punto1_perspectiva, grupo1.punto2_proyeccion, grupo1.punto3_desafios])
+        return punto()
+    
+    # Puntos de identidad (4-6) para crecimiento
+    if "quién" in texto or "soy" in texto or "identidad" in texto:
+        punto = random.choice([grupo2.punto4_identidad, grupo2.punto5_tiempo, grupo2.punto6_encarnar])
+        return punto()
+    
+    # Puntos de alineación (7-9) para confusión
+    if "no sé" in texto or "confundido" in texto or "duda" in texto:
+        punto = random.choice([grupo3.punto7_campo_cuantico, grupo3.punto8_alineacion, grupo3.punto9_ritmo_rendicion])
+        return punto()
+    
+    # Puntos de gratitud (10-12) para momentos bajos
+    if estado < 4 or "mal" in texto or "triste" in texto:
+        punto = random.choice([grupo4.punto10_gratitud, grupo4.punto11_disciplina, grupo4.punto12_desapego])
+        return punto()
+    
+    # Puntos de propósito (13-14) para inspiración
+    if "propósito" in texto or "sentido" in texto or "para qué" in texto:
+        punto = random.choice([grupo5.punto13_proposito, grupo5.punto14_expansion])
+        return punto()
+    
+    return None
+
+# ============================================
 # MANEJO DE MENSAJES
 # ============================================
 
@@ -467,6 +504,17 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Clasificar vibración
     vibracion = clasificar_vibracion(texto)
     
+    # ========================================
+    # APLICAR 14 PUNTOS SI CORRESPONDE
+    # ========================================
+    frase_punto = aplicar_punto_segun_contexto(texto, tema, estado)
+    
+    if frase_punto:
+        # Si hay un punto, lo agregamos como sugerencia
+        contexto_punto = f"\n\n💭 *Reflexión:* {frase_punto}"
+    else:
+        contexto_punto = ""
+
     # ========================================
     # GENERAR RESPUESTA
     # ========================================
