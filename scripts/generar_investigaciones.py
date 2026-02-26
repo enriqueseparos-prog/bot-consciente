@@ -12,6 +12,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from datetime import datetime
 
 # Agregar el directorio raiz al path para poder importar config
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -120,11 +121,17 @@ async def generar_investigacion(tema, tipo="tecnico"):
         return None
 
 def guardar_investigacion(tema, contenido, tipo):
-    """Guarda la investigacion en la carpeta knowledge/habitos/"""
+    """Guarda la investigacion en la carpeta correspondiente según tipo"""
     
-    # Crear nombre de archivo (ej: flexibilidad.txt)
-    nombre_archivo = tema.lower().replace(" ", "_").replace("(", "").replace(")", "")
-    ruta = Path(f"knowledge/habitos/{nombre_archivo}.txt")
+    nombre_archivo = tema.lower().replace(" ", "_").replace("(", "").replace(")", "").replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u")
+    
+    # Elegir carpeta según tipo
+    if tipo == "biografia":
+        carpeta = "maestros"
+    else:
+        carpeta = "habitos"
+    
+    ruta = Path(f"knowledge/{carpeta}/{nombre_archivo}.txt")
     
     # Asegurar que la carpeta existe
     ruta.parent.mkdir(parents=True, exist_ok=True)
@@ -133,10 +140,10 @@ def guardar_investigacion(tema, contenido, tipo):
     with open(ruta, "w", encoding="utf-8") as f:
         f.write(f"# INVESTIGACION: {tema.upper()}\n")
         f.write(f"# Tipo: {tipo}\n")
-        f.write(f"# Generado: {asyncio.get_event_loop().time()}\n\n")
+        f.write(f"# Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n")
         f.write(contenido)
     
-    print(f"? Investigacion guardada en: {ruta}")
+    print(f"✅ Investigacion guardada en: {ruta}")
     return ruta
 
 async def main():
