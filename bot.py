@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import io
 import os
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from pathlib import Path
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -448,6 +448,12 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text
     perfil = obtener_perfil(user_id)
     
+        # Obtener sistema de recordatorios
+    sistema_recordatorios = context.bot_data.get('sistema_recordatorios')
+    if not sistema_recordatorios:
+        sistema_recordatorios = SistemaRecordatorios(context.bot)
+        context.bot_data['sistema_recordatorios'] = sistema_recordatorios
+        
     # ========================================
     # CHECKIN RÁPIDO (formato "7 8 9")
     # ========================================
@@ -484,7 +490,7 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
             pass
     
     # ========================================
-    # CLASIFICAR MENSAJE
+        # CLASIFICAR MENSAJE
     # ========================================
     clasificacion = await clasificar_con_gemini(texto)
     tema = clasificacion.get("tema", "otro")
@@ -493,16 +499,23 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     perfil.registrar_tema(tema)
     
+    # Clasificar vibración
+    vibracion = clasificar_vibracion(texto)
+    
+    # Verificar si es un comando de recordatorio
+    respuesta_recordatorio = procesar_comando_recordatorio(texto, str(user_id), sistema_recordatorios)
+    if respuesta_recordatorio:
+        await update.message.reply_text(respuesta_recordatorio, parse_mode="Markdown")
+        guardar_conversacion(user_id, texto, respuesta_recordatorio, "recordatorio", "guia")
+        return
+        
     # Detectar patrones
     historial = []  # Aquí iría historial de BD
     patron = detectar_patron(texto, historial)
     estado_emo = detectar_estado_emocional(texto)
     
     # Elegir modo
-    modo = elegir_modo(estado_emo, patron)
-    
-    # Clasificar vibración
-    vibracion = clasificar_vibracion(texto)
+    modo = elegir_modo(estado_emo, patron, vibracion)
     
     # ========================================
     # APLICAR 14 PUNTOS SI CORRESPONDE
@@ -526,7 +539,11 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
         respuesta_final = respuesta_ia
     else:
         respuesta_final = "La IA no está disponible. Podés usar /checkin para registrar."
-    
+
+    # Agregar el punto de los 14 si corresponde
+    if frase_punto:
+        respuesta_final = f"{respuesta_final}\n\n💭 *Reflexión:* {frase_punto}"    
+   
     # Si hay patrón, agregar frase de confrontación
     if patron:
         frase_confrontacion = obtener_frase_confrontacion(modo)
@@ -594,7 +611,9 @@ def main():
     
     # Crear aplicación
     app = Application.builder().token(TOKEN).build()
-    
+        # Inicializar sistema de recordatorios
+    sistema_recordatorios = SistemaRecordatorios(app.bot)
+
     # Agregar comandos
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("habitos", habitos))
@@ -614,10 +633,10 @@ def main():
     # Tareas programadas
     job_queue = app.job_queue
     if job_queue:
-        job_queue.run_daily(verificar_inactividad, time=datetime.time(hour=10, minute=0))
-        job_queue.run_daily(recordatorio_proposito, time=datetime.time(hour=8, minute=0))
+        job_queue.run_daily(verificar_inactividad, time=time(10, 0))
+        job_queue.run_daily(recordatorio_proposito, time=time(8, 0))
     
-    print("🤖 BOT CONSCIENTE v5.0 INICIADO")
+        print("🤖 BOT CONSCIENTE v5.0 INICIADO")
     app.run_polling()
 
 if __name__ == "__main__":
