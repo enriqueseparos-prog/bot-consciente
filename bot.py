@@ -14,6 +14,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 from src.memoria.recordatorios import SistemaRecordatorios, procesar_comando_recordatorio
 from src.puntos_14 import grupo1, grupo2, grupo3, grupo4, grupo5
 from src.utils.sugerencias import obtener_sugerencia_proactiva
+from src.memoria.patrones import obtener_resumen_patrones
 
 # Configuración de logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -628,6 +629,16 @@ async def enviar_sugerencias_proactivas(context: ContextTypes.DEFAULT_TYPE):
         except Exception as e:
             print(f"Error enviando sugerencia a {user_id}: {e}")
 
+async def enviar_sugerencias_proactivas(context: ContextTypes.DEFAULT_TYPE):
+    pass
+
+async def patrones(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Muestra patrones semanales del usuario"""
+    user_id = update.effective_user.id
+    resumen = obtener_resumen_patrones(user_id)
+    await update.message.reply_text(resumen, parse_mode="Markdown")
+    guardar_conversacion(user_id, "/patrones", resumen, "patrones", "guia")
+
 def main():
     # Inicializar base de datos
     init_db()
@@ -646,6 +657,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("habitos", habitos))
     app.add_handler(CommandHandler("grafica", grafica))
+    app.add_handler(CommandHandler("patrones", patrones))
     app.add_handler(CommandHandler("maestro", maestro))
     app.add_handler(CommandHandler("investigar", investigar))
     app.add_handler(CommandHandler("biografia", biografia))
