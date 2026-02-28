@@ -1,4 +1,4 @@
-# src/memoria/recordatorios.py
+﻿# src/memoria/recordatorios.py
 # Sistema de recordatorios para el bot consciente
 # Permite programar avisos tipo: "recordame tomar agua a las 3 PM"
 
@@ -149,6 +149,27 @@ class SistemaRecordatorios:
         """Detiene el hilo verificador"""
         self.hilo_activo = False
 
+    def programar_recordatorio_habito(self, usuario_id, habito, hora):
+        """Programa un recordatorio para un hábito específico"""
+        mensaje = f"🌱 *Recordatorio de hábito:* {habito}"
+        return self.programar_recordatorio(usuario_id, mensaje, hora, recurrente=True)
+    
+    def listar_habitos_con_recordatorio(self, usuario_id):
+        """Lista qué hábitos tienen recordatorio"""
+        if usuario_id not in self.recordatorios:
+            return []
+        
+        habitos = []
+        for rec in self.recordatorios[usuario_id]:
+            if rec["activo"] and "Recordatorio de hábito:" in rec["mensaje"]:
+                habito = rec["mensaje"].replace("🌱 *Recordatorio de hábito:* ", "")
+                habitos.append({
+                    "habito": habito,
+                    "hora": rec["hora"],
+                    "id": rec["id"]
+                })
+        return habitos
+
 # Funciones de utilidad para procesar comandos de recordatorios
 def procesar_comando_recordatorio(texto: str, usuario_id: str, sistema: SistemaRecordatorios) -> str:
     """
@@ -157,50 +178,74 @@ def procesar_comando_recordatorio(texto: str, usuario_id: str, sistema: SistemaR
     Ejemplos:
     - "recordame tomar agua a las 15:30"
     - "recordatorio diario meditar a las 7:00"
+    - "recordame hacer flexibilidad a las 18:00"
+    - "mis hábitos con recordatorio"
     - "mis recordatorios"
     - "cancelar recordatorio tomar agua"
     """
-    texto = texto.lower()
+    texto_lower = texto.lower()
     
-    # Listar recordatorios
-    if texto in ["mis recordatorios", "listar recordatorios", "ver recordatorios"]:
+    # Recordatorio de hábito específico
+    if "recordame hacer" in texto_lower or "recordatorio hábito" in texto_lower:
+        import re
+        # Buscar la hora
+        match_hora = re.search(r'a las (\d{1,2}:\d{2})', texto_lower)
+        if match_hora:
+            hora = match_hora.group(1)
+            # Extraer el hábito
+            if "recordame hacer" in texto_lower:
+                habito = texto_lower.split("recordame hacer")[1].split(" a las")[0].strip()
+            else:
+                habito = texto_lower.split("recordatorio hábito")[1].split(" a las")[0].strip()
+            
+            sistema.programar_recordatorio_habito(usuario_id, habito, hora)
+            return f"✅ Recordatorio para hábito '{habito}' programado a las {hora}"
+    
+    # Listar recordatorios de hábitos
+    if "mis hábitos con recordatorio" in texto_lower:
+        habitos = sistema.listar_habitos_con_recordatorio(usuario_id)
+        if not habitos:
+            return "📋 No tenés hábitos con recordatorio."
+        
+        respuesta = "📋 *Hábitos con recordatorio:*\n"
+        for h in habitos:
+            respuesta += f"• {h['habito']} a las {h['hora']}\n"
+        return respuesta
+    
+    # Listar todos los recordatorios
+    if "mis recordatorios" in texto_lower or "listar recordatorios" in texto_lower:
         recordatorios = sistema.listar_recordatorios(usuario_id)
         if not recordatorios:
-            return "📭 No tenés recordatorios activos."
+            return "📋 No tenés recordatorios activos."
         
-        respuesta = "📋 **Tus recordatorios activos:**\n\n"
+        respuesta = "📋 *Tus recordatorios activos:*\n\n"
         for i, rec in enumerate(recordatorios, 1):
             recurrente = "🔄 diario" if rec["recurrente"] else "⏰ única vez"
             respuesta += f"{i}. {rec['hora']} - {rec['mensaje']} {recurrente}\n"
         return respuesta
     
     # Cancelar recordatorio
-    if texto.startswith("cancelar recordatorio "):
-        texto_buscar = texto.replace("cancelar recordatorio ", "").strip()
+    if "cancelar recordatorio" in texto_lower:
+        texto_buscar = texto_lower.replace("cancelar recordatorio", "").strip()
         if usuario_id in sistema.recordatorios:
             for rec in sistema.recordatorios[usuario_id]:
-                if rec["activo"] and texto_buscar.lower() in rec["mensaje"].lower():
+                if rec["activo"] and texto_buscar in rec["mensaje"].lower():
                     sistema.cancelar_recordatorio(usuario_id, rec["id"])
                     return f"✅ Recordatorio cancelado: {rec['mensaje']}"
         return "❌ No encontré ese recordatorio."
     
-    # Crear recordatorio
-    if "recordame" in texto or "recordatorio" in texto:
-        # Extraer mensaje y hora
+    # Crear recordatorio normal
+    if "recordame" in texto_lower or "recordatorio" in texto_lower:
         import re
-        
-        # Patrón para "a las HH:MM"
         patron_hora = r'a las (\d{1,2}:\d{2})'
-        match = re.search(patron_hora, texto)
+        match = re.search(patron_hora, texto_lower)
         
         if match:
             hora = match.group(1)
-            # Asegurar formato HH:MM
             if len(hora.split(':')[0]) == 1:
                 hora = '0' + hora
             
-            # Extraer mensaje (todo lo que está entre "recordame" y "a las")
-            partes = texto.split(" a las ")[0]
+            partes = texto_lower.split(" a las ")[0]
             if "recordame" in partes:
                 mensaje = partes.replace("recordame", "").strip()
             elif "recordatorio" in partes:
@@ -208,8 +253,7 @@ def procesar_comando_recordatorio(texto: str, usuario_id: str, sistema: SistemaR
             else:
                 mensaje = partes
             
-            # Verificar si es recurrente
-            recurrente = "diario" in texto or "todos los días" in texto
+            recurrente = "diario" in texto_lower or "todos los días" in texto_lower
             
             resultado = sistema.programar_recordatorio(usuario_id, mensaje, hora, recurrente)
             
