@@ -15,6 +15,7 @@ from src.memoria.recordatorios import SistemaRecordatorios, procesar_comando_rec
 from src.puntos_14 import grupo1, grupo2, grupo3, grupo4, grupo5
 from src.utils.sugerencias import obtener_sugerencia_proactiva
 from src.memoria.patrones import obtener_resumen_patrones
+from src.memoria.embedding import procesar_mensaje_para_embedding, obtener_contexto_semantico
 
 # Configuración de logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -450,7 +451,7 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text
     perfil = obtener_perfil(user_id)
     
-        # Obtener sistema de recordatorios
+    # Obtener sistema de recordatorios
     sistema_recordatorios = context.bot_data.get('sistema_recordatorios')
     if not sistema_recordatorios:
         sistema_recordatorios = SistemaRecordatorios(context.bot)
@@ -466,33 +467,38 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if 1 <= cuerpo <= 10 and 1 <= mente <= 10 and 1 <= alma <= 10:
                 guardar_registro(user_id, cuerpo, mente, alma)
                 perfil.actualizar_por_checkin(cuerpo, mente, alma)
-                
-                # Emojis según valores
+
                 def emoji(valor):
                     if valor >= 8: return "😊"
                     elif valor >= 5: return "😐"
-                    else: return "😞"
-                
-                # Mensaje según vibración
-                vibracion = clasificar_vibracion(texto)
-                
+                    else: return "😔"
+
                 respuesta = (
                     f"✅ *Registro guardado*\n\n"
                     f"Cuerpo: {cuerpo}/10 {emoji(cuerpo)}\n"
                     f"Mente: {mente}/10 {emoji(mente)}\n"
-                    f"Alma: {alma}/10 {emoji(alma)}\n\n"
-                    f"💬 {vibracion['sugerencia']}\n"
-                    f"✨ {vibracion['frase']}"
+                    f"Alma: {alma}/10 {emoji(alma)}"
                 )
-                
+
                 await update.message.reply_text(respuesta, parse_mode="Markdown")
                 guardar_conversacion(user_id, texto, respuesta, "checkin", "guia")
                 return
         except:
             pass
+
+    # ========================================
+    # RESPUESTA A FEEDBACK
+    # ========================================
+    if texto.replace(" ", "").isdigit() and 1 <= int(texto) <= 10:
+        # Es una respuesta de feedback (número)
+        from src.utils.feedback import feedback_loop
+        # Acá habría que buscar el último feedback pendiente
+        # Por ahora solo registramos que respondió
+        await update.message.reply_text("✅ Gracias por tu feedback. Me ayuda a mejorar.")
+        return
     
     # ========================================
-        # CLASIFICAR MENSAJE
+    # CLASIFICAR MENSAJE
     # ========================================
     clasificacion = await clasificar_con_gemini(texto)
     tema = clasificacion.get("tema", "otro")
@@ -504,15 +510,19 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Clasificar vibración
     vibracion = clasificar_vibracion(texto)
     
-    # Verificar si es un comando de recordatorio
+    # ========================================
+    # COMANDOS DE RECORDATORIO
+    # ========================================
     respuesta_recordatorio = procesar_comando_recordatorio(texto, str(user_id), sistema_recordatorios)
     if respuesta_recordatorio:
         await update.message.reply_text(respuesta_recordatorio, parse_mode="Markdown")
         guardar_conversacion(user_id, texto, respuesta_recordatorio, "recordatorio", "guia")
         return
-        
-    # Detectar patrones
-    historial = []  # Aquí iría historial de BD
+    
+    # ========================================
+    # DETECTAR PATRONES
+    # ========================================
+    historial = []
     patron = detectar_patron(texto, historial)
     estado_emo = detectar_estado_emocional(texto)
     
@@ -520,21 +530,29 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     modo = elegir_modo(estado_emo, patron, vibracion)
     
     # ========================================
-    # APLICAR 14 PUNTOS SI CORRESPONDE
+    # GENERAR RESPUESTA CON IA (CON EMBEDDINGS)
     # ========================================
-    frase_punto = aplicar_punto_segun_contexto(texto, tema, estado)
     
-    if frase_punto:
-        # Si hay un punto, lo agregamos como sugerencia
-        contexto_punto = f"\n\n💭 *Reflexión:* {frase_punto}"
-    else:
-        contexto_punto = ""
+        # ========================================
+    # PERSONALIDAD POR TEMA
+    # ========================================
+    from src.personalidad.temas import obtener_personalidad_para_tema
+    personalidad = obtener_personalidad_para_tema(tema, estado)
 
-    # ========================================
-    # GENERAR RESPUESTA
-    # ========================================
-    prompt = f"El usuario dice: '{texto}'. Tema: {tema}. Estado: {estado}/10. Vibración: {vibracion['vibracion']}. {vibracion['sugerencia']}"
+    # Obtener contexto semántico (mensajes similares por significado)
+    from src.memoria.embedding import obtener_contexto_semantico
+    contexto_semantico = obtener_contexto_semantico(user_id, texto)
     
+    # Construir prompt base
+    prompt_base = f"{personalidad}\n\nEl usuario dice: '{texto}'. Tema: {tema}. Estado: {estado}/10. Vibración: {vibracion['vibracion']}. {vibracion['sugerencia']}"
+
+    # Agregar contexto semántico si existe
+    if contexto_semantico:
+        prompt = contexto_semantico + "\n\n" + prompt_base
+    else:
+        prompt = prompt_base
+    
+    # Generar respuesta
     respuesta_ia = await generar_respuesta_con_ia(prompt, modo)
     
     if respuesta_ia:
@@ -542,18 +560,34 @@ async def manejar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         respuesta_final = "La IA no está disponible. Podés usar /checkin para registrar."
 
-    # Agregar el punto de los 14 si corresponde
+    # Agregar punto de los 14 si corresponde
+    from src.puntos_14 import grupo1, grupo2, grupo3, grupo4, grupo5
+    frase_punto = None
+    if "problema" in texto or "difícil" in texto or "no puedo" in texto:
+        frase_punto = grupo1.punto1_perspectiva()
     if frase_punto:
-        respuesta_final = f"{respuesta_final}\n\n💭 *Reflexión:* {frase_punto}"    
-   
+        respuesta_final = f"{respuesta_final}\n\n💭 *Reflexión:* {frase_punto}"
+    
     # Si hay patrón, agregar frase de confrontación
     if patron:
-        frase_confrontacion = obtener_frase_confrontacion(modo)
+        from src.confrontacion.modos import obtener_frase
+        frase_confrontacion = obtener_frase(modo)
         respuesta_final = f"{frase_confrontacion}\n\n{respuesta_final}"
     
+    # Enviar respuesta
     await update.message.reply_text(respuesta_final)
+    
+    # Guardar en base de datos
     guardar_conversacion(user_id, texto, respuesta_final, tema, modo)
+    
+    # ========================================
+    # GENERAR EMBEDDING EN BACKGROUND
+    # ========================================
+    from src.memoria.embedding import procesar_mensaje_para_embedding
+    import asyncio
+    asyncio.create_task(procesar_mensaje_para_embedding(user_id, 0, texto))
 
+    
 # ============================================
 # TAREAS PROGRAMADAS
 # ============================================
@@ -639,6 +673,19 @@ async def patrones(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(resumen, parse_mode="Markdown")
     guardar_conversacion(user_id, "/patrones", resumen, "patrones", "guia")
 
+async def preguntar_feedback(context: ContextTypes.DEFAULT_TYPE):
+    from src.utils.feedback import feedback_loop
+    pendientes = feedback_loop.obtener_pendientes(horas=2)
+    
+    for fid, user_id, sugerencia in pendientes:
+        try:
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=f"💭 Hace un rato te sugerí: '{sugerencia[:50]}...'\n\n¿Te sirvió? (respondé 1-10 o 'no')"
+            )
+        except:
+            pass
+
 def main():
     # Inicializar base de datos
     init_db()
@@ -675,6 +722,9 @@ def main():
     if job_queue:
         job_queue.run_daily(verificar_inactividad, time=time(10, 0))
         job_queue.run_daily(recordatorio_proposito, time=time(8, 0))
+            # Feedback loop: preguntar cada 2 horas si sirvió
+        job_queue.run_repeating(preguntar_feedback, interval=7200, first=30)
+
             # Sugerencias proactivas cada 3 horas
         job_queue.run_repeating(enviar_sugerencias_proactivas, interval=10800, first=10)
     
